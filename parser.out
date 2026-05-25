@@ -1,0 +1,280 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    TEMPO
+
+Grammar
+
+Rule 0     S' -> automacao
+Rule 1     automacao -> QUANDO gatilho condicao_opt ENTAO acao
+Rule 2     gatilho -> ENTIDADE_ID MUDAR PARA estado
+Rule 3     condicao_opt -> SE ENTIDADE_ID operador_logico valor
+Rule 4     condicao_opt -> empty
+Rule 5     empty -> <empty>
+Rule 6     acao -> comando ENTIDADE_ID
+Rule 7     estado -> STRING
+Rule 8     estado -> NUMERO
+Rule 9     operador_logico -> MAIOR
+Rule 10    operador_logico -> MENOR
+Rule 11    operador_logico -> IGUAL
+Rule 12    comando -> LIGAR
+Rule 13    comando -> DESLIGAR
+Rule 14    valor -> NUMERO
+Rule 15    valor -> STRING
+
+Terminals, with rules where they appear
+
+DESLIGAR             : 13
+ENTAO                : 1
+ENTIDADE_ID          : 2 3 6
+IGUAL                : 11
+LIGAR                : 12
+MAIOR                : 9
+MENOR                : 10
+MUDAR                : 2
+NUMERO               : 8 14
+PARA                 : 2
+QUANDO               : 1
+SE                   : 3
+STRING               : 7 15
+TEMPO                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+acao                 : 1
+automacao            : 0
+comando              : 6
+condicao_opt         : 1
+empty                : 4
+estado               : 2
+gatilho              : 1
+operador_logico      : 3
+valor                : 3
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . automacao
+    (1) automacao -> . QUANDO gatilho condicao_opt ENTAO acao
+
+    QUANDO          shift and go to state 2
+
+    automacao                      shift and go to state 1
+
+state 1
+
+    (0) S' -> automacao .
+
+
+
+state 2
+
+    (1) automacao -> QUANDO . gatilho condicao_opt ENTAO acao
+    (2) gatilho -> . ENTIDADE_ID MUDAR PARA estado
+
+    ENTIDADE_ID     shift and go to state 4
+
+    gatilho                        shift and go to state 3
+
+state 3
+
+    (1) automacao -> QUANDO gatilho . condicao_opt ENTAO acao
+    (3) condicao_opt -> . SE ENTIDADE_ID operador_logico valor
+    (4) condicao_opt -> . empty
+    (5) empty -> .
+
+    SE              shift and go to state 6
+    ENTAO           reduce using rule 5 (empty -> .)
+
+    condicao_opt                   shift and go to state 5
+    empty                          shift and go to state 7
+
+state 4
+
+    (2) gatilho -> ENTIDADE_ID . MUDAR PARA estado
+
+    MUDAR           shift and go to state 8
+
+
+state 5
+
+    (1) automacao -> QUANDO gatilho condicao_opt . ENTAO acao
+
+    ENTAO           shift and go to state 9
+
+
+state 6
+
+    (3) condicao_opt -> SE . ENTIDADE_ID operador_logico valor
+
+    ENTIDADE_ID     shift and go to state 10
+
+
+state 7
+
+    (4) condicao_opt -> empty .
+
+    ENTAO           reduce using rule 4 (condicao_opt -> empty .)
+
+
+state 8
+
+    (2) gatilho -> ENTIDADE_ID MUDAR . PARA estado
+
+    PARA            shift and go to state 11
+
+
+state 9
+
+    (1) automacao -> QUANDO gatilho condicao_opt ENTAO . acao
+    (6) acao -> . comando ENTIDADE_ID
+    (12) comando -> . LIGAR
+    (13) comando -> . DESLIGAR
+
+    LIGAR           shift and go to state 14
+    DESLIGAR        shift and go to state 15
+
+    acao                           shift and go to state 12
+    comando                        shift and go to state 13
+
+state 10
+
+    (3) condicao_opt -> SE ENTIDADE_ID . operador_logico valor
+    (9) operador_logico -> . MAIOR
+    (10) operador_logico -> . MENOR
+    (11) operador_logico -> . IGUAL
+
+    MAIOR           shift and go to state 17
+    MENOR           shift and go to state 18
+    IGUAL           shift and go to state 19
+
+    operador_logico                shift and go to state 16
+
+state 11
+
+    (2) gatilho -> ENTIDADE_ID MUDAR PARA . estado
+    (7) estado -> . STRING
+    (8) estado -> . NUMERO
+
+    STRING          shift and go to state 21
+    NUMERO          shift and go to state 22
+
+    estado                         shift and go to state 20
+
+state 12
+
+    (1) automacao -> QUANDO gatilho condicao_opt ENTAO acao .
+
+    $end            reduce using rule 1 (automacao -> QUANDO gatilho condicao_opt ENTAO acao .)
+
+
+state 13
+
+    (6) acao -> comando . ENTIDADE_ID
+
+    ENTIDADE_ID     shift and go to state 23
+
+
+state 14
+
+    (12) comando -> LIGAR .
+
+    ENTIDADE_ID     reduce using rule 12 (comando -> LIGAR .)
+
+
+state 15
+
+    (13) comando -> DESLIGAR .
+
+    ENTIDADE_ID     reduce using rule 13 (comando -> DESLIGAR .)
+
+
+state 16
+
+    (3) condicao_opt -> SE ENTIDADE_ID operador_logico . valor
+    (14) valor -> . NUMERO
+    (15) valor -> . STRING
+
+    NUMERO          shift and go to state 25
+    STRING          shift and go to state 26
+
+    valor                          shift and go to state 24
+
+state 17
+
+    (9) operador_logico -> MAIOR .
+
+    NUMERO          reduce using rule 9 (operador_logico -> MAIOR .)
+    STRING          reduce using rule 9 (operador_logico -> MAIOR .)
+
+
+state 18
+
+    (10) operador_logico -> MENOR .
+
+    NUMERO          reduce using rule 10 (operador_logico -> MENOR .)
+    STRING          reduce using rule 10 (operador_logico -> MENOR .)
+
+
+state 19
+
+    (11) operador_logico -> IGUAL .
+
+    NUMERO          reduce using rule 11 (operador_logico -> IGUAL .)
+    STRING          reduce using rule 11 (operador_logico -> IGUAL .)
+
+
+state 20
+
+    (2) gatilho -> ENTIDADE_ID MUDAR PARA estado .
+
+    SE              reduce using rule 2 (gatilho -> ENTIDADE_ID MUDAR PARA estado .)
+    ENTAO           reduce using rule 2 (gatilho -> ENTIDADE_ID MUDAR PARA estado .)
+
+
+state 21
+
+    (7) estado -> STRING .
+
+    SE              reduce using rule 7 (estado -> STRING .)
+    ENTAO           reduce using rule 7 (estado -> STRING .)
+
+
+state 22
+
+    (8) estado -> NUMERO .
+
+    SE              reduce using rule 8 (estado -> NUMERO .)
+    ENTAO           reduce using rule 8 (estado -> NUMERO .)
+
+
+state 23
+
+    (6) acao -> comando ENTIDADE_ID .
+
+    $end            reduce using rule 6 (acao -> comando ENTIDADE_ID .)
+
+
+state 24
+
+    (3) condicao_opt -> SE ENTIDADE_ID operador_logico valor .
+
+    ENTAO           reduce using rule 3 (condicao_opt -> SE ENTIDADE_ID operador_logico valor .)
+
+
+state 25
+
+    (14) valor -> NUMERO .
+
+    ENTAO           reduce using rule 14 (valor -> NUMERO .)
+
+
+state 26
+
+    (15) valor -> STRING .
+
+    ENTAO           reduce using rule 15 (valor -> STRING .)
+

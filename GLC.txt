@@ -1,0 +1,12 @@
+Terminais (Tokens - Letras Maiúsculas):
+QUANDO, SE, ENTAO, LIGAR, DESLIGAR, MUDAR_PARA, ENTIDADE_ID, TEMPO, NUMERO, STRING, MAIOR, MENOR, IGUAL, COMENTARIO
+
+Não-Terminais (Regras - Letras Minúsculas):
+automacao -> QUANDO gatilho condicao_opt ENTAO acao
+gatilho -> ENTIDADE_ID MUDAR_PARA estado
+condicao_opt -> SE ENTIDADE_ID operador_logico valor | $\epsilon$ (vazio)
+acao -> comando ENTIDADE_ID
+estado -> STRING | NUMERO
+operador_logico -> MAIOR | MENOR | IGUAL
+comando -> LIGAR | DESLIGAR
+valor -> NUMERO | STRING
