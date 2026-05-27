@@ -1,0 +1,26 @@
+# Exemplo 4: Teste de erros semânticos e modo pânico
+# Este arquivo contém erros propositais para testar
+# a recuperação do parser e a análise semântica.
+
+# Automação com erro: tentar ligar um sensor (impossível)
+automacao "Teste erro semantico"
+    quando sensor.temperatura mudar para "quente"
+    entao
+        ligar sensor.temperatura
+    fim
+;
+
+# Automação com erro SINTÁTICO: falta o "fim"
+automacao "Teste erro sintatico"
+    quando sensor.porta mudar para "on"
+    entao
+        ligar light.sala
+
+;
+
+# Automação válida depois dos erros (testa recuperação)
+automacao "Teste recuperação"
+    quando binary_sensor.motion mudar para "on"
+    entao
+        ligar light.quarto
+    fim

@@ -1,0 +1,13 @@
+# Exemplo 2: Automação com condição, delay e notificação
+# Liga o corredor quando há movimento, mas só se a temperatura
+# estiver acima de 20 graus. Depois de 2 minutos, desliga.
+
+automacao "Corredor - movimento com condição"
+    quando sensor.corredor_motion mudar para "on"
+    se sensor.temperatura > 20
+    entao
+        ligar light.corredor
+        esperar 2min
+        desligar light.corredor
+        notificar "Corredor: luz desligada automaticamente" para "mobile_app_zfold4"
+    fim

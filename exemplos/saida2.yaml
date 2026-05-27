@@ -1,0 +1,33 @@
+- id: '1779899134346'
+  alias: Corredor - movimento com condição
+  description: ''
+  triggers:
+  - entity_id:
+    - sensor.corredor_motion
+    to: 'on'
+    trigger: state
+  conditions:
+  - condition: numeric_state
+    entity_id: sensor.temperatura
+    above: 20
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.corredor
+  - delay:
+      hours: 0
+      minutes: 2
+      seconds: 0
+      milliseconds: 0
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.corredor
+  - action: notify.mobile_app_zfold4
+    metadata: {}
+    data:
+      message: 'Corredor: luz desligada automaticamente'
+  mode: single

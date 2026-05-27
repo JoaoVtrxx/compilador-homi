@@ -1,0 +1,8 @@
+# Exemplo 1: Automação simples — ligar/desligar uma luz
+# Quando o sensor de movimento detectar "on", liga a luz da sala.
+
+automacao "Sala - ligar luz com movimento"
+    quando binary_sensor.sala_motion mudar para "on"
+    entao
+        ligar light.luz_sala
+    fim

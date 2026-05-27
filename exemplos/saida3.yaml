@@ -1,0 +1,117 @@
+- id: '1779898392893'
+  alias: Corredor - movimento duplo
+  description: ''
+  triggers:
+  - entity_id:
+    - binary_sensor.corredor_sensor1
+    to: 'on'
+    trigger: state
+  - entity_id:
+    - binary_sensor.corredor_sensor2
+    to: 'on'
+    trigger: state
+  conditions:
+  - condition: state
+    entity_id: switch.modo_noturno
+    state: 'off'
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.corredor
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 45
+      milliseconds: 0
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.corredor
+  mode: single
+- id: '1779898392894'
+  alias: Sala - desligar LED sanca
+  description: ''
+  triggers:
+  - trigger: time
+    at: 05:00:00
+  conditions: []
+  actions:
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.led_sanca
+  mode: single
+- id: '1779898392895'
+  alias: Suite - controle noturno
+  description: ''
+  triggers:
+  - entity_id:
+    - binary_sensor.suite_motion
+    to: 'on'
+    trigger: state
+  conditions: []
+  actions:
+  - if:
+    - condition: state
+      entity_id: switch.modo_dormir
+      state: 'on'
+    then:
+    - action: light.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: light.abajur_suite
+    - action: light.turn_on
+      metadata: {}
+      data:
+        brightness_pct: 20
+      target:
+        entity_id: light.abajur_suite
+    else:
+    - action: light.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: light.luz_suite
+    - action: switch.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: switch.ventilador
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - action: notify.mobile_app_zfold4
+    metadata: {}
+    data:
+      message: 'Suite: luzes ajustadas'
+  mode: single
+- id: '1779898392896'
+  alias: Cozinha - ligar luzes via automação
+  description: ''
+  triggers:
+  - entity_id:
+    - sensor.luminosidade_cozinha
+    to: low
+    trigger: state
+  conditions:
+  - condition: numeric_state
+    entity_id: sensor.luminosidade_cozinha
+    below: 100
+  actions:
+  - action: automation.trigger
+    metadata: {}
+    data: {}
+    target:
+      entity_id: automation.cozinha_ligar_luzes
+  - action: notify.mobile_app_zfold4
+    metadata: {}
+    data:
+      message: Cozinha escura - luzes ligadas!
+  mode: single

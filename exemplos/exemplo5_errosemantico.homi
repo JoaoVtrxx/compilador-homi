@@ -1,0 +1,22 @@
+# Teste de erros semânticos (sintaxe correta)
+
+automacao "Teste - ligar sensor"
+    quando sensor.temperatura mudar para "quente"
+    entao
+        ligar sensor.temperatura
+    fim
+;
+
+automacao "Teste - comparação inválida"
+    quando sensor.humidade mudar para "alta"
+    se sensor.humidade > "texto_invalido"
+    entao
+        desligar light.sala
+    fim
+;
+
+automacao "Teste - serviço inválido"
+    quando binary_sensor.porta mudar para "on"
+    entao
+        chamar light.explodir light.sala
+    fim

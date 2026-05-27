@@ -1,0 +1,47 @@
+# Exemplo 3: Múltiplas automações, múltiplos gatilhos, se/senao
+# Demonstra todos os recursos da linguagem Homi.
+
+# Automação 1: Movimento no corredor (dois sensores com OU)
+automacao "Corredor - movimento duplo"
+    quando binary_sensor.corredor_sensor1 mudar para "on"
+        ou binary_sensor.corredor_sensor2 mudar para "on"
+    se switch.modo_noturno == "off"
+    entao
+        ligar light.corredor
+        esperar 45s
+        desligar light.corredor
+    fim
+;
+
+# Automação 2: Desligar LED da sanca às 5h da manhã
+automacao "Sala - desligar LED sanca"
+    quando horario "05:00:00"
+    entao
+        desligar light.led_sanca
+    fim
+;
+
+# Automação 3: Controle inteligente com se/senao dentro das ações
+automacao "Suite - controle noturno"
+    quando binary_sensor.suite_motion mudar para "on"
+    entao
+        se switch.modo_dormir == "on" entao
+            ligar light.abajur_suite
+            definir light.abajur_suite 20
+        senao
+            ligar light.luz_suite
+            ligar switch.ventilador
+        fim
+        esperar 5min
+        notificar "Suite: luzes ajustadas" para "mobile_app_zfold4"
+    fim
+;
+
+# Automação 4: Chamar um serviço específico
+automacao "Cozinha - ligar luzes via automação"
+    quando sensor.luminosidade_cozinha mudar para "low"
+    se sensor.luminosidade_cozinha < 100
+    entao
+        chamar automation.trigger automation.cozinha_ligar_luzes
+        notificar "Cozinha escura - luzes ligadas!" para "mobile_app_zfold4"
+    fim
