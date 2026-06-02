@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homi IDE — Dashboard do Compilador</title>
+    
+    <!-- Google Fonts: Outfit (modern sans) e JetBrains Mono (monospaced) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Prism.js CSS para realce de sintaxe YAML -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        :root {
+            --bg-main: #090d16;
+            --bg-panel: #111827;
+            --bg-card: #1f2937;
+            --border-color: #374151;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            
+            --primary: #2563eb;
+            --primary-glow: rgba(37, 99, 235, 0.4);
+            --primary-hover: #3b82f6;
+            
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.2);
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.2);
+            
+            --color-trigger: #0ea5e9;
+            --color-condition: #eab308;
+            --color-action: #a855f7;
+            --color-control: #6366f1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Header */
+        header {
+            background-color: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+
+        .logo-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #3b82f6, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-title p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .dropdown-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        select {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: var(--primary);
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .btn-compile {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 10px var(--primary-glow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-compile:hover {
+            background-color: var(--primary-hover);
+            box-shadow: 0 0 15px var(--primary-glow);
+            transform: translateY(-1px);
+        }
+
+        .btn-compile:active {
+            transform: translateY(0);
+        }
+
+        /* Main Workspace Layout */
+        .workspace {
+            display: grid;
+            grid-template-columns: 42% 58%;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Left Panel: Editor + Console */
+        .left-panel {
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-panel);
+        }
+
+        .editor-container {
+            flex: 1;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+            background-color: #0b0f19;
+            padding: 10px 0;
+        }
+
+        /* Styled Code Editor with Line Numbers */
+        .line-numbers {
+            width: 48px;
+            padding-right: 10px;
+            text-align: right;
+            color: #4b5563;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            user-select: none;
+            border-right: 1px solid #1e293b;
+        }
+
+        .editor-textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            resize: none;
+            outline: none;
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            padding-left: 15px;
+            padding-right: 15px;
+            overflow-y: auto;
+            white-space: pre;
+        }
+
+        /* Console Output Section */
+        .console-container {
+            height: 220px;
+            background-color: #030712;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .console-header {
+            background-color: #0f172a;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .status-dot.success { background-color: var(--success); box-shadow: 0 0 8px var(--success); }
+        .status-dot.error { background-color: var(--danger); box-shadow: 0 0 8px var(--danger); }
+        .status-dot.warning { background-color: var(--warning); box-shadow: 0 0 8px var(--warning); }
+
+        .console-output {
+            flex: 1;
+            padding: 12px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            overflow-y: auto;
+            color: #9ca3af;
+            white-space: pre-wrap;
+        }
+
+        .console-output .error-line {
+            color: #f87171;
+        }
+
+        .console-output .warning-line {
+            color: #fbbf24;
+        }
+
+        .console-output .success-line {
+            color: #34d399;
+        }
+
+        /* Right Panel: Tabs + Results */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-main);
+        }
+
+        /* Tabs list */
+        .tabs-header {
+            display: flex;
+            background-color: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 14px 20px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-hover);
+            border-bottom-color: var(--primary);
+            background-color: rgba(255, 255, 255, 0.04);
+        }
+
+        .tabs-content {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tab-pane {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 24px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* --- Tab: Flowchart (Fluxo Visual) --- */
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 40px;
+        }
+
+        .flow-item {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .flow-card {
+            background-color: var(--bg-panel);
+            border-left: 5px solid var(--border-color);
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .flow-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+
+        .flow-card.trigger { border-left-color: var(--color-trigger); }
+        .flow-card.condition { border-left-color: var(--color-condition); }
+        .flow-card.action { border-left-color: var(--color-action); }
+
+        .flow-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .flow-card.trigger .flow-card-header { color: var(--color-trigger); }
+        .flow-card.condition .flow-card-header { color: var(--color-condition); }
+        .flow-card.action .flow-card-header { color: var(--color-action); }
+
+        .flow-card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .flow-card-detail {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .flow-connector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 30px;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        /* Parallel branch visualizer (for IF-ELSE) */
+        .branch-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 700px;
+            border: 1px dashed var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.01);
+            position: relative;
+        }
+
+        .branch-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .branch-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .branch-then .branch-title {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .branch-else .branch-title {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        /* --- Tab: YAML --- */
+        .yaml-actions {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-copy {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover {
+            background-color: var(--border-color);
+        }
+
+        .code-block-container {
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0;
+            background-color: #0b0f19;
+            font-size: 0.85rem;
+        }
+
+        /* --- Tab: Symbol Table --- */
+        .table-container {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: var(--bg-panel);
+            color: var(--text-main);
+            font-weight: 600;
+            padding: 12px 16px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255,255,255,0.01);
+        }
+
+        tr:hover {
+            background-color: rgba(255,255,255,0.03);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.sensor { background-color: rgba(14, 165, 233, 0.1); color: var(--color-trigger); border: 1px solid rgba(14, 165, 233, 0.2); }
+        .badge.atuador { background-color: rgba(168, 85, 247, 0.1); color: var(--color-action); border: 1px solid rgba(168, 85, 247, 0.2); }
+        .badge.auxiliar { background-color: rgba(99, 102, 241, 0.1); color: var(--color-control); border: 1px solid rgba(99, 102, 241, 0.2); }
+
+        /* --- Tab: AST (Collapsible Tree View) --- */
+        .ast-tree {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .ast-node {
+            margin-left: 20px;
+            position: relative;
+        }
+
+        .ast-node::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: var(--border-color);
+        }
+
+        .ast-node:last-child::before {
+            height: 12px;
+        }
+
+        .ast-node-header {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .ast-node-header:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .ast-toggle {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            display: inline-block;
+            width: 10px;
+        }
+
+        .ast-toggle.expanded {
+            transform: rotate(90deg);
+        }
+
+        .ast-node-type {
+            color: #a78bfa;
+            font-weight: 600;
+        }
+
+        .ast-node-prop {
+            color: #60a5fa;
+            font-size: 0.8rem;
+        }
+
+        .ast-node-value {
+            color: #34d399;
+        }
+
+        .ast-children {
+            display: none;
+        }
+
+        .ast-children.expanded {
+            display: block;
+        }
+
+        /* --- Empty states and Errors --- */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+            gap: 12px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 2.5rem;
+            opacity: 0.5;
+        }
+
+        .error-card {
+            background-color: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 16px;
+            border-radius: 8px;
+            color: #fca5a5;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .error-card-title {
+            font-weight: 700;
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Auto-compiler toggle styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 36px;
+            height: 20px;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            transition: .3s;
+            border-radius: 20px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 12px;
+            width: 12px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-muted);
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(16px);
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">H</div>
+            <div class="logo-title">
+                <h1>Homi Compiler IDE</h1>
+                <p>Pipeline visual de automações para Home Assistant</p>
+            </div>
+        </div>
+        
+        <div class="toolbar">
+            <!-- Dropdown de Exemplos -->
+            <div class="dropdown-container">
+                <label for="examples-select">Exemplos:</label>
+                <select id="examples-select">
+                    <option value="">-- Carregar Exemplo --</option>
+                </select>
+            </div>
+
+            <!-- Auto Compilar Toggle -->
+            <div class="toggle-container">
+                <span>Compilar ao digitar</span>
+                <label class="switch">
+                    <input type="checkbox" id="auto-compile-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <!-- Botão Compilar -->
+            <button class="btn-compile" id="btn-compile">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Compilar
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="workspace">
+        
+        <!-- Left Panel: Editor & Logs -->
+        <div class="left-panel">
+            <div class="editor-container">
+                <div class="line-numbers" id="line-numbers">1</div>
+                <textarea class="editor-textarea" id="editor" placeholder="# Escreva seu script Homi aqui...
+automacao &quot;Minha Automacao&quot;
+    quando sensor.movimento mudar para &quot;on&quot;
+    entao
+        ligar light.sala
+    fim" spellcheck="false"></textarea>
+            </div>
+            
+            <div class="console-container">
+                <div class="console-header">
+                    <span>Console do Compilador</span>
+                    <span class="status-dot" id="console-status-dot"></span>
+                </div>
+                <div class="console-output" id="console-output">Editor iniciado. Digite algo ou carregue um exemplo...</div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Visualizer, YAML, Tokens, AST, SymTable -->
+        <div class="right-panel">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="tab-flow">Fluxo Visual</button>
+                <button class="tab-btn" data-tab="tab-yaml">Código YAML</button>
+                <button class="tab-btn" data-tab="tab-symbols">Tabela de Símbolos</button>
+                <button class="tab-btn" data-tab="tab-ast">Árvore Sintática (AST)</button>
+                <button class="tab-btn" data-tab="tab-tokens">Tokens Léxicos</button>
+            </div>
+
+            <div class="tabs-content">
+                
+                <!-- Tab: Flowchart -->
+                <div class="tab-pane active" id="tab-flow">
+                    <div class="empty-state" id="flow-empty">
+                        <div class="empty-icon">📊</div>
+                        <h3>Nenhum fluxo para exibir</h3>
+                        <p>Escreva um código Homi válido e compile para visualizar o fluxograma da automação.</p>
+                    </div>
+                    <div id="flow-content" class="flow-container" style="display: none;"></div>
+                </div>
+
+                <!-- Tab: YAML -->
+                <div class="tab-pane" id="tab-yaml">
+                    <div class="empty-state" id="yaml-empty">
+                        <div class="empty-icon">📄</div>
+                        <h3>Nenhum código gerado</h3>
+                        <p>O YAML será exibido aqui assim que a compilação for concluída com sucesso.</p>
+                    </div>
+                    <div id="yaml-content" style="display: none;">
+                        <div class="yaml-actions">
+                            <button class="btn-copy" id="btn-copy-yaml">Copiar Código</button>
+                        </div>
+                        <div class="code-block-container">
+                            <pre><code class="language-yaml" id="yaml-code"></code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Symbols -->
+                <div class="tab-pane" id="tab-symbols">
+                    <div class="empty-state" id="symbols-empty">
+                        <div class="empty-icon">🔑</div>
+                        <h3>Tabela de Símbolos vazia</h3>
+                        <p>Compile um script válido para ver as variáveis e entidades registradas pelo analisador semântico.</p>
+                    </div>
+                    <div id="symbols-content" style="display: none;">
+                        <table class="table-container">
+                            <thead>
+                                <tr>
+                                    <th>Entidade ID</th>
+                                    <th>Domínio</th>
+                                    <th>Tipo de Dispositivo</th>
+                                    <th>Ref. Linha</th>
+                                </tr>
+                            </thead>
+                            <tbody id="symbols-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab: AST -->
+                <div class="tab-pane" id="tab-ast">
+                    <div class="empty-state" id="ast-empty">
+                        <div class="empty-icon">🌲</div>
+                        <h3>AST não construída</h3>
+                        <p>A árvore sintática estruturada (Abstract Syntax Tree) será mostrada aqui pós-parsing.</p>
+                    </div>
+                    <div id="ast-content" class="ast-tree" style="display: none;"></div>
+                </div>
+
+                <!-- Tab: Tokens -->
+                <div class="tab-pane" id="tab-tokens">
+                    <div class="empty-state" id="tokens-empty">
+                        <div class="empty-icon">🪙</div>
+                        <h3>Nenhum token listado</h3>
+                        <p>Escreva código e compile para inspecionar os tokens extraídos na análise léxica.</p>
+                    </div>
+                    <div id="tokens-content" style="display: none;">
+                        <table class="table-container">
+                            <thead>
+                                <tr>
+                                    <th>Linha</th>
+                                    <th>Tipo do Token</th>
+                                    <th>Valor Encontrado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tokens-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Prism JS para colorização de sintaxe -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+
+    <script>
+        // DOM Elements
+        const editor = document.getElementById('editor');
+        const lineNumbers = document.getElementById('line-numbers');
+        const btnCompile = document.getElementById('btn-compile');
+        const autoCompileToggle = document.getElementById('auto-compile-toggle');
+        const examplesSelect = document.getElementById('examples-select');
+        
+        const consoleOutput = document.getElementById('console-output');
+        const consoleStatusDot = document.getElementById('console-status-dot');
+        
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+        
+        // Tab contents and empty states
+        const views = {
+            flow: { content: document.getElementById('flow-content'), empty: document.getElementById('flow-empty') },
+            yaml: { content: document.getElementById('yaml-content'), empty: document.getElementById('yaml-empty') },
+            symbols: { content: document.getElementById('symbols-content'), empty: document.getElementById('symbols-empty') },
+            ast: { content: document.getElementById('ast-content'), empty: document.getElementById('ast-empty') },
+            tokens: { content: document.getElementById('tokens-content'), empty: document.getElementById('tokens-empty') },
+        };
+
+        // Debounce timer for auto-compile
+        let compileTimeout;
+
+        // Initialize editor sync for line numbers
+        function updateLineNumbers() {
+            const lines = editor.value.split('\n').length;
+            let numbersHtml = '';
+            for (let i = 1; i <= lines; i++) {
+                numbersHtml += i + '<br>';
+            }
+            lineNumbers.innerHTML = numbersHtml;
+        }
+
+        editor.addEventListener('input', () => {
+            updateLineNumbers();
+            if (autoCompileToggle.checked) {
+                clearTimeout(compileTimeout);
+                compileTimeout = setTimeout(compile, 500); // 500ms debounce
+            }
+        });
+
+        editor.addEventListener('scroll', () => {
+            lineNumbers.scrollTop = editor.scrollTop;
+        });
+
+        // Tabs Logic
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabPanes.forEach(p => p.classList.remove('active'));
+                
+                btn.classList.add('active');
+                const targetTab = btn.getAttribute('data-tab');
+                document.getElementById(targetTab).classList.add('active');
+            });
+        });
+
+        // Load Examples list
+        async function loadExamplesList() {
+            try {
+                const response = await fetch('/api/examples');
+                if (response.ok) {
+                    const files = await response.json();
+                    files.forEach(file => {
+                        const option = document.createElement('option');
+                        option.value = file;
+                        option.textContent = file;
+                        examplesSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error("Erro ao listar exemplos:", error);
+            }
+        }
+
+        // Example change event
+        examplesSelect.addEventListener('change', async () => {
+            const fileName = examplesSelect.value;
+            if (!fileName) return;
+            
+            try {
+                const response = await fetch(`/api/example?name=${encodeURIComponent(fileName)}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    editor.value = data.content;
+                    updateLineNumbers();
+                    compile();
+                }
+            } catch (error) {
+                console.error("Erro ao carregar exemplo:", error);
+            }
+        });
+
+        // Copy YAML button
+        document.getElementById('btn-copy-yaml').addEventListener('click', () => {
+            const yamlText = document.getElementById('yaml-code').textContent;
+            navigator.clipboard.writeText(yamlText).then(() => {
+                const btn = document.getElementById('btn-copy-yaml');
+                const origText = btn.textContent;
+                btn.textContent = 'Copiado!';
+                setTimeout(() => btn.textContent = origText, 1500);
+            });
+        });
+
+        // Trigger compilation manually
+        btnCompile.addEventListener('click', compile);
+
+        // Core Compiler Pipeline Invocation
+        async function compile() {
+            const code = editor.value;
+            if (!code.trim()) {
+                consoleOutput.textContent = "Editor vazio. Escreva algum código Homi para compilar.";
+                consoleStatusDot.className = 'status-dot';
+                return;
+            }
+
+            consoleOutput.textContent = "Compilando...";
+            consoleStatusDot.className = 'status-dot warning';
+
+            try {
+                const response = await fetch('/api/compile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    renderCompileResults(data);
+                } else {
+                    const err = await response.json();
+                    consoleOutput.textContent = `Erro do Servidor:\n${err.error || 'Erro desconhecido'}`;
+                    consoleStatusDot.className = 'status-dot error';
+                }
+            } catch (error) {
+                consoleOutput.textContent = `Falha de conexão com o servidor do compilador:\n${error.message}`;
+                consoleStatusDot.className = 'status-dot error';
+            }
+        }
+
+        // Render compilation stages in the UI
+        function renderCompileResults(data) {
+            // 1. Process stdout logs in Console
+            let formattedLogs = data.logs || '';
+            consoleOutput.innerHTML = formatLogs(formattedLogs, data);
+            
+            // Set status dot
+            if (data.success) {
+                consoleStatusDot.className = 'status-dot success';
+            } else if (data.syntax_errors.length > 0 || data.semantic_errors.length > 0) {
+                consoleStatusDot.className = 'status-dot error';
+            } else {
+                consoleStatusDot.className = 'status-dot warning';
+            }
+
+            // 2. Render Tokens Tab
+            if (data.tokens && data.tokens.length > 0) {
+                views.tokens.empty.style.display = 'none';
+                views.tokens.content.style.display = 'block';
+                const tbody = document.getElementById('tokens-tbody');
+                tbody.innerHTML = '';
+                data.tokens.forEach(t => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${t.line}</td>
+                        <td><strong>${t.type}</strong></td>
+                        <td><code>${escapeHtml(t.value)}</code></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                views.tokens.empty.style.display = 'flex';
+                views.tokens.content.style.display = 'none';
+            }
+
+            // 3. Render AST Tab
+            if (data.ast) {
+                views.ast.empty.style.display = 'none';
+                views.ast.content.style.display = 'block';
+                const astContent = document.getElementById('ast-content');
+                astContent.innerHTML = '';
+                astContent.appendChild(renderAstNode(data.ast));
+            } else {
+                views.ast.empty.style.display = 'flex';
+                views.ast.content.style.display = 'none';
+            }
+
+            // 4. Render Symbol Table Tab
+            const symKeys = Object.keys(data.symbol_table || {});
+            if (symKeys.length > 0) {
+                views.symbols.empty.style.display = 'none';
+                views.symbols.content.style.display = 'block';
+                const tbody = document.getElementById('symbols-tbody');
+                tbody.innerHTML = '';
+                symKeys.forEach(name => {
+                    const info = data.symbol_table[name];
+                    const tr = document.createElement('tr');
+                    let badgeClass = 'auxiliar';
+                    if (info.tipo === 'sensor') badgeClass = 'sensor';
+                    if (info.tipo === 'atuador') badgeClass = 'atuador';
+                    
+                    tr.innerHTML = `
+                        <td><code>${name}</code></td>
+                        <td>${info.dominio}</td>
+                        <td><span class="badge ${badgeClass}">${info.tipo}</span></td>
+                        <td>${info.linha}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                views.symbols.empty.style.display = 'flex';
+                views.symbols.content.style.display = 'none';
+            }
+
+            // 5. Render YAML Tab
+            if (data.yaml) {
+                views.yaml.empty.style.display = 'none';
+                views.yaml.content.style.display = 'block';
+                const codeNode = document.getElementById('yaml-code');
+                codeNode.textContent = data.yaml;
+                Prism.highlightElement(codeNode);
+            } else {
+                views.yaml.empty.style.display = 'flex';
+                views.yaml.content.style.display = 'none';
+            }
+
+            // 6. Render Flowchart Tab (Visual Automation)
+            if (data.ast && data.ast.automacoes) {
+                views.flow.empty.style.display = 'none';
+                views.flow.content.style.display = 'flex';
+                const flowContent = document.getElementById('flow-content');
+                flowContent.innerHTML = '';
+                
+                // For each automation, render its flowchart blocks
+                data.ast.automacoes.forEach(auto => {
+                    flowContent.appendChild(renderAutomationFlow(auto));
+                });
+            } else {
+                views.flow.empty.style.display = 'flex';
+                views.flow.content.style.display = 'none';
+            }
+        }
+
+        // Format raw stdout from compiler to HTML with colors
+        function formatLogs(logs, data) {
+            let lines = logs.split('\n');
+            let formatted = '';
+            
+            lines.forEach(line => {
+                if (line.includes('Erro de Sintaxe') || line.includes('Erro Semântico') || line.includes('Erro Léxico') || line.includes('✗')) {
+                    formatted += `<div class="error-line">${escapeHtml(line)}</div>`;
+                } else if (line.includes('Aviso') || line.includes('⚠')) {
+                    formatted += `<div class="warning-line">${escapeHtml(line)}</div>`;
+                } else if (line.includes('✓') || line.includes('SUCESSO')) {
+                    formatted += `<div class="success-line">${escapeHtml(line)}</div>`;
+                } else {
+                    formatted += `<div>${escapeHtml(line)}</div>`;
+                }
+            });
+
+            // If there are explicit errors in lists but not printed
+            if (data.syntax_errors.length > 0) {
+                formatted += '<div class="error-line">\n--- ERROS SINTÁTICOS DETECTADOS ---</div>';
+                data.syntax_errors.forEach(e => {
+                    formatted += `<div class="error-line">✗ ${escapeHtml(e)}</div>`;
+                });
+            }
+            if (data.semantic_errors.length > 0) {
+                formatted += '<div class="error-line">\n--- ERROS SEMÂNTICOS DETECTADOS ---</div>';
+                data.semantic_errors.forEach(e => {
+                    formatted += `<div class="error-line">✗ ${escapeHtml(e)}</div>`;
+                });
+            }
+            
+            return formatted || "Compilação concluída sem logs adicionais de saída.";
+        }
+
+        // Render AST Node recursively
+        function renderAstNode(node) {
+            const container = document.createElement('div');
+            container.className = 'ast-node';
+
+            const header = document.createElement('div');
+            header.className = 'ast-node-header';
+
+            const nodeType = node.node_type || 'Node';
+            
+            // Build key properties representation
+            let propsText = '';
+            let childrenNodes = {};
+
+            Object.keys(node).forEach(key => {
+                if (key === 'node_type') return;
+                const val = node[key];
+                
+                if (val && typeof val === 'object') {
+                    // It's a child node or list of child nodes
+                    childrenNodes[key] = val;
+                } else {
+                    // Literal property
+                    if (val !== null && val !== undefined) {
+                        propsText += ` <span class="ast-node-prop">${key}:</span> <span class="ast-node-value">"${val}"</span>`;
+                    }
+                }
+            });
+
+            const hasChildren = Object.keys(childrenNodes).length > 0;
+
+            if (hasChildren) {
+                const toggle = document.createElement('span');
+                toggle.className = 'ast-toggle';
+                toggle.innerHTML = '▶';
+                header.appendChild(toggle);
+            } else {
+                const spacer = document.createElement('span');
+                spacer.style.width = '10px';
+                header.appendChild(spacer);
+            }
+
+            const typeSpan = document.createElement('span');
+            typeSpan.className = 'ast-node-type';
+            typeSpan.textContent = nodeType;
+            header.appendChild(typeSpan);
+
+            if (propsText) {
+                const propsSpan = document.createElement('span');
+                propsSpan.innerHTML = propsText;
+                header.appendChild(propsSpan);
+            }
+
+            container.appendChild(header);
+
+            if (hasChildren) {
+                const childrenContainer = document.createElement('div');
+                childrenContainer.className = 'ast-children';
+
+                Object.keys(childrenNodes).forEach(key => {
+                    const child = childrenNodes[key];
+                    
+                    const labelDiv = document.createElement('div');
+                    labelDiv.style.marginLeft = '15px';
+                    labelDiv.style.color = '#9ca3af';
+                    labelDiv.style.fontSize = '0.8rem';
+                    labelDiv.innerHTML = `↳ <strong>${key}</strong>:`;
+                    childrenContainer.appendChild(labelDiv);
+
+                    if (Array.isArray(child)) {
+                        child.forEach(item => {
+                            if (item && typeof item === 'object') {
+                                childrenContainer.appendChild(renderAstNode(item));
+                            }
+                        });
+                    } else if (child && typeof child === 'object') {
+                        childrenContainer.appendChild(renderAstNode(child));
+                    }
+                });
+
+                container.appendChild(childrenContainer);
+
+                // Add Toggle Action
+                header.addEventListener('click', (e) => {
+                    const isExpanded = childrenContainer.classList.toggle('expanded');
+                    header.querySelector('.ast-toggle').classList.toggle('expanded', isExpanded);
+                    e.stopPropagation();
+                });
+            }
+
+            return container;
+        }
+
+        // --- Render Visual Automation Flowchart ---
+        function renderAutomationFlow(auto) {
+            const root = document.createElement('div');
+            root.style.width = '100%';
+            root.style.display = 'flex';
+            root.style.flexDirection = 'column';
+            root.style.alignItems = 'center';
+
+            // 1. Automation Title Card
+            const titleCard = document.createElement('div');
+            titleCard.className = 'flow-card';
+            titleCard.style.borderLeftColor = 'var(--color-control)';
+            titleCard.style.maxWidth = '500px';
+            titleCard.style.width = '100%';
+            titleCard.innerHTML = `
+                <div class="flow-card-header" style="color: var(--color-control);">Automação</div>
+                <div class="flow-card-title">✨ "${auto.alias}"</div>
+                <div class="flow-card-detail">Linha de definição: ${auto.linha}</div>
+            `;
+            root.appendChild(titleCard);
+
+            // Connector
+            root.appendChild(createConnector());
+
+            // 2. Triggers Block
+            const triggersContainer = document.createElement('div');
+            triggersContainer.className = 'flow-card trigger';
+            triggersContainer.style.maxWidth = '500px';
+            triggersContainer.style.width = '100%';
+            
+            let triggerHeader = `<div class="flow-card-header">Gatilho (Quando)</div>`;
+            let triggerBody = '';
+            
+            if (auto.gatilhos && auto.gatilhos.length > 0) {
+                auto.gatilhos.forEach((g, idx) => {
+                    if (idx > 0) triggerBody += '<div style="margin: 8px 0; border-top: 1px dashed var(--border-color); padding-top: 8px; color: var(--color-trigger); font-weight: 700; font-size: 0.75rem;">OU</div>';
+                    
+                    if (g.node_type === 'GatilhoEstadoNode') {
+                        const val = g.expressao ? g.expressao.valor : '';
+                        triggerBody += `
+                            <div class="flow-card-title">🔌 ${g.entidade_id}</div>
+                            <div class="flow-card-detail">Muda o estado para: <strong>"${val}"</strong></div>
+                        `;
+                    } else if (g.node_type === 'GatilhoHorarioNode') {
+                        triggerBody += `
+                            <div class="flow-card-title">⏰ Horário</div>
+                            <div class="flow-card-detail">Dispara exatamente às: <strong>${g.horario}</strong></div>
+                        `;
+                    }
+                });
+            } else {
+                triggerBody = '<div class="flow-card-detail">Sem gatilhos definidos.</div>';
+            }
+            
+            triggersContainer.innerHTML = triggerHeader + triggerBody;
+            root.appendChild(triggersContainer);
+
+            // Connector
+            root.appendChild(createConnector());
+
+            // 3. Condition Block (Optional)
+            if (auto.condicao) {
+                const condCard = document.createElement('div');
+                condCard.className = 'flow-card condition';
+                condCard.style.maxWidth = '500px';
+                condCard.style.width = '100%';
+                
+                const val = auto.condicao.expressao ? auto.condicao.expressao.valor : '';
+                condCard.innerHTML = `
+                    <div class="flow-card-header">Condição Restritiva (Se)</div>
+                    <div class="flow-card-title">🔍 ${auto.condicao.entidade_id}</div>
+                    <div class="flow-card-detail">Deve ser: <strong>${auto.condicao.operador} "${val}"</strong></div>
+                `;
+                root.appendChild(condCard);
+                root.appendChild(createConnector());
+            }
+
+            // 4. Actions Block (Then)
+            const actionsTitle = document.createElement('div');
+            actionsTitle.style.fontSize = '0.75rem';
+            actionsTitle.style.fontWeight = '700';
+            actionsTitle.style.textTransform = 'uppercase';
+            actionsTitle.style.color = 'var(--color-action)';
+            actionsTitle.style.letterSpacing = '1px';
+            actionsTitle.style.marginBottom = '10px';
+            actionsTitle.textContent = 'Executar Ações (Então)';
+            root.appendChild(actionsTitle);
+
+            const actionsListContainer = document.createElement('div');
+            actionsListContainer.style.width = '100%';
+            actionsListContainer.style.display = 'flex';
+            actionsListContainer.style.flexDirection = 'column';
+            actionsListContainer.style.alignItems = 'center';
+            
+            renderActionNodes(auto.acoes, actionsListContainer);
+            root.appendChild(actionsListContainer);
+
+            return root;
+        }
+
+        // Render list of actions recursively
+        function renderActionNodes(acoesList, parentElement) {
+            if (!acoesList || acoesList.length === 0) return;
+
+            acoesList.forEach((action, idx) => {
+                if (idx > 0) {
+                    parentElement.appendChild(createConnector());
+                }
+
+                if (action.node_type === 'BlocoSeNode') {
+                    // Render nested IF-THEN-ELSE
+                    const ifElseContainer = document.createElement('div');
+                    ifElseContainer.style.width = '100%';
+                    ifElseContainer.style.display = 'flex';
+                    ifElseContainer.style.flexDirection = 'column';
+                    ifElseContainer.style.alignItems = 'center';
+
+                    // Condition Header Card
+                    const condCard = document.createElement('div');
+                    condCard.className = 'flow-card condition';
+                    condCard.style.width = '100%';
+                    condCard.style.maxWidth = '500px';
+                    const val = action.condicao.expressao ? action.condicao.expressao.valor : '';
+                    condCard.innerHTML = `
+                        <div class="flow-card-header">Lógica Condicional (Se Interno)</div>
+                        <div class="flow-card-title">❓ ${action.condicao.entidade_id}</div>
+                        <div class="flow-card-detail">Checa se: <strong>${action.condicao.operador} "${val}"</strong></div>
+                    `;
+                    ifElseContainer.appendChild(condCard);
+                    ifElseContainer.appendChild(createConnector());
+
+                    // Side-by-side Branches
+                    const branchWrapper = document.createElement('div');
+                    branchWrapper.className = 'branch-container';
+
+                    // Then branch
+                    const thenCol = document.createElement('div');
+                    thenCol.className = 'branch-column branch-then';
+                    thenCol.innerHTML = '<span class="branch-title">Verdadeiro</span>';
+                    
+                    const thenActionsContainer = document.createElement('div');
+                    thenActionsContainer.style.width = '100%';
+                    renderActionNodes(action.acoes_entao, thenActionsContainer);
+                    thenCol.appendChild(thenActionsContainer);
+                    branchWrapper.appendChild(thenCol);
+
+                    // Else branch
+                    const elseCol = document.createElement('div');
+                    elseCol.className = 'branch-column branch-else';
+                    elseCol.innerHTML = '<span class="branch-title">Falso</span>';
+
+                    const elseActionsContainer = document.createElement('div');
+                    elseActionsContainer.style.width = '100%';
+                    if (action.acoes_senao && action.acoes_senao.length > 0) {
+                        renderActionNodes(action.acoes_senao, elseActionsContainer);
+                    } else {
+                        const noAction = document.createElement('div');
+                        noAction.style.color = 'var(--text-muted)';
+                        noAction.style.fontSize = '0.8rem';
+                        noAction.style.fontStyle = 'italic';
+                        noAction.style.padding = '10px';
+                        noAction.textContent = 'Nenhuma ação';
+                        elseActionsContainer.appendChild(noAction);
+                    }
+                    elseCol.appendChild(elseActionsContainer);
+                    branchWrapper.appendChild(elseCol);
+
+                    ifElseContainer.appendChild(branchWrapper);
+                    parentElement.appendChild(ifElseContainer);
+
+                } else {
+                    // Render simple action card
+                    const actionCard = document.createElement('div');
+                    actionCard.className = 'flow-card action';
+                    actionCard.style.width = '100%';
+                    actionCard.style.maxWidth = '500px';
+
+                    let content = '';
+                    if (action.node_type === 'AcaoLigarNode') {
+                        content = `
+                            <div class="flow-card-header">Ligar Atuador</div>
+                            <div class="flow-card-title">💡 Ligar ${action.entidade_id}</div>
+                        `;
+                    } else if (action.node_type === 'AcaoDesligarNode') {
+                        content = `
+                            <div class="flow-card-header">Desligar Atuador</div>
+                            <div class="flow-card-title">🌑 Desligar ${action.entidade_id}</div>
+                        `;
+                    } else if (action.node_type === 'AcaoEsperarNode') {
+                        content = `
+                            <div class="flow-card-header">Esperar (Delay)</div>
+                            <div class="flow-card-title">⏳ Aguardar ${action.tempo_raw}</div>
+                            <div class="flow-card-detail">Equivale a: ${action.segundos} segundos</div>
+                        `;
+                    } else if (action.node_type === 'AcaoNotificarNode') {
+                        content = `
+                            <div class="flow-card-header">Enviar Notificação</div>
+                            <div class="flow-card-title">💬 Notificar "${action.destino}"</div>
+                            <div class="flow-card-detail">Mensagem: "${action.mensagem}"</div>
+                        `;
+                    } else if (action.node_type === 'AcaoDefinirNode') {
+                        const val = action.expressao ? action.expressao.valor : '';
+                        content = `
+                            <div class="flow-card-header">Definir Parâmetro</div>
+                            <div class="flow-card-title">⚙️ Ajustar ${action.entidade_id}</div>
+                            <div class="flow-card-detail">Novo valor: <strong>"${val}"</strong></div>
+                        `;
+                    } else if (action.node_type === 'AcaoChamarNode') {
+                        content = `
+                            <div class="flow-card-header">Chamada de Serviço</div>
+                            <div class="flow-card-title">🛠️ Chamar serviço "${action.servico}"</div>
+                            <div class="flow-card-detail">Entidade alvo: ${action.entidade_id}</div>
+                        `;
+                    }
+
+                    actionCard.innerHTML = content + `<div class="flow-card-detail" style="margin-top: 4px; opacity: 0.6; font-size: 0.7rem;">Linha: ${action.linha}</div>`;
+                    parentElement.appendChild(actionCard);
+                }
+            });
+        }
+
+        // Helper to generate flowchart connecting arrows
+        function createConnector() {
+            const div = document.createElement('div');
+            div.className = 'flow-connector';
+            div.innerHTML = '⬇️';
+            return div;
+        }
+
+        // HTML Escape helper
+        function escapeHtml(text) {
+            if (typeof text !== 'string') return text;
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Initial setup
+        loadExamplesList();
+        updateLineNumbers();
+    </script>
+</body>
+</html>
