@@ -102,7 +102,7 @@ class AnalisadorSemantico:
                 tipo_dom = DOMINIOS[dominio]['tipo']
                 self.erros.append(
                     f"Erro Semântico (linha {linha}): Não é possível executar "
-                    f"'{acao_nome}' na entidade '{entidade_id}' — domínio "
+                    f"'{acao_nome}' na entidade '{entidade_id}' - domínio "
                     f"'{dominio}' (tipo: {tipo_dom}) não suporta esta ação."
                 )
 
@@ -261,42 +261,3 @@ class AnalisadorSemantico:
         for entidade, info in sorted(self.tabela_simbolos.items()):
             print(f"  {entidade:<40s} {info['dominio']:<20s} {info['tipo']:<15s}")
         print("=" * 70)
-
-
-# ============================================================
-# Teste Local
-# ============================================================
-if __name__ == '__main__':
-    # Teste com AST construída manualmente
-    programa = ProgramaNode(automacoes=[
-        AutomacaoNode(
-            alias="Teste semântico",
-            gatilhos=[GatilhoEstadoNode("sensor.temperatura", ExpressaoNode('STRING', 'on'), 1)],
-            condicao=CondicaoNode("sensor.temperatura", ">", ExpressaoNode('NUMERO', 25), 2),
-            acoes=[
-                AcaoLigarNode("light.sala", 3),
-                AcaoLigarNode("sensor.temperatura", 4),      # ERRO: sensor não pode ser ligado
-                AcaoDesligarNode("light.sala", 5),
-                AcaoChamarNode("light.turn_on", "light.sala", 6),
-                AcaoChamarNode("light.explodir", "light.sala", 7),  # ERRO: serviço inválido
-            ],
-            linha=1,
-        )
-    ])
-
-    analisador = AnalisadorSemantico()
-    erros, avisos = analisador.analisar(programa)
-
-    analisador.imprimir_tabela_simbolos()
-
-    if avisos:
-        print(f"\n⚠ {len(avisos)} aviso(s):")
-        for a in avisos:
-            print(f"  {a}")
-
-    if erros:
-        print(f"\n✗ {len(erros)} erro(s) semântico(s):")
-        for e in erros:
-            print(f"  {e}")
-    else:
-        print("\n✓ Nenhum erro semântico encontrado.")

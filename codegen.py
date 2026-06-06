@@ -1,5 +1,5 @@
 # codegen.py
-# Gerador de Código Intermediário: AST → YAML (Home Assistant)
+# Gerador de Código Intermediário: AST -> YAML (Home Assistant)
 # Traduz a árvore sintática para automações YAML compatíveis com Home Assistant.
 
 import yaml
@@ -71,7 +71,7 @@ class GeradorYAML:
                 'entity_id': condicao.entidade_id,
                 'state': str(condicao.expressao.valor),
             }
-            # Para !=, não há suporte direto — usamos template
+            # Para !=, não há suporte direto - usamos template
             if condicao.operador == '!=':
                 cond = {
                     'condition': 'template',

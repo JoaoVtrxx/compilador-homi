@@ -1,4 +1,4 @@
-# Exemplo 1: Automação simples — ligar/desligar uma luz
+# Exemplo 1: Automação simples - ligar/desligar uma luz
 # Quando o sensor de movimento detectar "on", liga a luz da sala.
 
 automacao "Sala - ligar luz com movimento"

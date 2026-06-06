@@ -17,7 +17,7 @@ def main():
     # 1. Argumentos de linha de comando
     # ============================================================
     arg_parser = argparse.ArgumentParser(
-        description='Compilador Homi — Traduz scripts .homi para YAML do Home Assistant.',
+        description='Compilador Homi - Traduz scripts .homi para YAML do Home Assistant.',
         epilog='Exemplo: python3 main.py exemplo.homi -o automacao.yaml --verbose',
     )
     arg_parser.add_argument('arquivo', help='Arquivo de entrada .homi')
@@ -39,7 +39,7 @@ def main():
         sys.exit(1)
 
     print("=" * 65)
-    print("  COMPILADOR HOMI — Pipeline de Compilação")
+    print("  COMPILADOR HOMI - Pipeline de Compilação")
     print("=" * 65)
     print(f"  Arquivo: {args.arquivo}")
     print()
@@ -87,7 +87,7 @@ def main():
     print(f"    Automações encontradas: {len(ast.automacoes)}")
     for i, auto in enumerate(ast.automacoes, 1):
         cond_str = "com condição" if auto.condicao else "sem condição"
-        print(f"    [{i}] \"{auto.alias}\" — "
+        print(f"    [{i}] \"{auto.alias}\" - "
               f"{len(auto.gatilhos)} gatilho(s), "
               f"{len(auto.acoes)} ação(ões), {cond_str}")
 
