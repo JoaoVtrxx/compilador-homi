@@ -175,7 +175,7 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
             return {                                 # ex.: CHAMAR media_player.volume_set media_player.tv_da_sala 0.5
                 'action': acao.servico,              # 'media_player.volume_set'
                 'metadata': {},
-                'data': data,                        # 'volume_level: 0.5' (mapeado pelo mapa SERVICO_COM_EXPRESSAO)
+                'data': data,                        # 'volume_level: 0.5' (mapeado pelo SERVICO_COM_EXPRESSAO)
                 'target': {
                     'entity_id': acao.entidade_id,   # 'media_player.tv_da_sala'
                 },

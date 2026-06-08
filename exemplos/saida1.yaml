@@ -1,0 +1,16 @@
+- id: '1780926135973'
+  alias: Sala - ligar luz com movimento
+  description: ''
+  triggers:
+  - entity_id:
+    - binary_sensor.sala_motion
+    to: 'on'
+    trigger: state
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.luz_sala
+  mode: single

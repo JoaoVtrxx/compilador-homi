@@ -262,7 +262,7 @@ class AnalisadorSemantico:
                 self._analisar_acao(sub_acao)
 
     # Relatório da Tabela de Símbolos
-    def imprimir_tabela_simbolos(self):
+    def imprimir_tabela_simbolos(self): # so pra verbose
         # Imprime a tabela de símbolos de forma formatada.
         print("\n" + "-" * 70)
         print("  TABELA DE SÍMBOLOS")

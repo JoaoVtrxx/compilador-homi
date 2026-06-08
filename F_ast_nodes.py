@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
-# Definição dos nós da Árvore Sintática Abstrata (AST) para a linguagem Homi.
+# Definição dos nós da Árvore Sintática Abstrata (AST) para a linguagem Homi
 
 # Expressões (folhas da árvore):
 
@@ -87,7 +87,6 @@ class BlocoSeNode:
     acoes_senao: list       # List[AcaoNode] ou lista vazia
     linha: int = 0
 
-
 # Tipo união para qualquer ação
 AcaoNode = Union[
     AcaoLigarNode,
@@ -102,26 +101,18 @@ AcaoNode = Union[
 # Tipo união para qualquer gatilho
 GatilhoNode = Union[GatilhoEstadoNode, GatilhoHorarioNode]
 
-
-# ============================================================
-# Automação (nó principal)
-# ============================================================
+# Automação (nó principal, filho da raiz):
 
 @dataclass
 class AutomacaoNode:
-    """Uma automação completa."""
     alias: str                                 # Nome da automação (STRING)
     gatilhos: List[GatilhoNode]                # Lista de gatilhos (1 ou mais)
     condicao: Optional[CondicaoNode]           # Condição opcional
     acoes: List[AcaoNode]                      # Lista de ações (1 ou mais)
     linha: int = 0
 
-
-# ============================================================
-# Programa (raiz da AST)
-# ============================================================
+# Programa (raiz da AST, lista de automacoes)
 
 @dataclass
 class ProgramaNode:
-    """Nó raiz: lista de automações."""
     automacoes: List[AutomacaoNode] = field(default_factory=list)
