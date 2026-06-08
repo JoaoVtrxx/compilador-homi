@@ -11,91 +11,77 @@ class ExpressaoNode: # Representa um valor literal: NUMERO ou STRING.
     valor: Union[int, float, str]
     linha: int = 0
 
-
 # Gatilhos (triggers):
 
 @dataclass
 class GatilhoEstadoNode:
-    """Gatilho de mudança de estado: ENTIDADE_ID MUDAR PARA expressao"""
+    # Gatilho de mudança de estado: ENTIDADE_ID MUDAR PARA expressao
     entidade_id: str
     expressao: ExpressaoNode
     linha: int = 0
 
-
 @dataclass
 class GatilhoHorarioNode:
-    """Gatilho de horário: HORARIO STRING"""
+    # Gatilho de horário: HORARIO STRING
     horario: str       # ex: "05:00:00"
     linha: int = 0
 
-
-# ============================================================
-# Condições
-# ============================================================
+# Condições:
 
 @dataclass
 class CondicaoNode:
-    """Condição: ENTIDADE_ID operador expressao"""
+    # Condição: ENTIDADE_ID operador expressao
     entidade_id: str
     operador: str      # '>', '<', '==', '>=', '<=', '!='
     expressao: ExpressaoNode
     linha: int = 0
 
-
-# ============================================================
-# Ações
-# ============================================================
+# Ações:
 
 @dataclass
 class AcaoLigarNode:
-    """Ação: LIGAR ENTIDADE_ID"""
+    # Ação: LIGAR ENTIDADE_ID
     entidade_id: str
     linha: int = 0
-
 
 @dataclass
 class AcaoDesligarNode:
-    """Ação: DESLIGAR ENTIDADE_ID"""
+    # Ação: DESLIGAR ENTIDADE_ID
     entidade_id: str
     linha: int = 0
 
-
 @dataclass
 class AcaoEsperarNode:
-    """Ação: ESPERAR TEMPO"""
+    # Ação: ESPERAR TEMPO
     tempo_raw: str     # ex: "10s", "5min", "1h", "500ms"
     segundos: float    # valor convertido para segundos
     linha: int = 0
 
-
 @dataclass
 class AcaoNotificarNode:
-    """Ação: NOTIFICAR STRING PARA STRING"""
+    # Ação: NOTIFICAR STRING PARA STRING
     mensagem: str
     destino: str       # ex: "mobile_app_zfold4"
     linha: int = 0
 
-
 @dataclass
 class AcaoDefinirNode:
-    """Ação: DEFINIR ENTIDADE_ID expressao"""
+    # Ação: DEFINIR ENTIDADE_ID expressao
     entidade_id: str
     expressao: ExpressaoNode
     linha: int = 0
 
-
 @dataclass
 class AcaoChamarNode:
-    """Ação: CHAMAR ENTIDADE_ID(servico) ENTIDADE_ID(alvo) [expressao]"""
+    # Ação: CHAMAR ENTIDADE_ID(servico) ENTIDADE_ID(alvo) [expressao]
     servico: str       # ex: "light.turn_on"
     entidade_id: str   # ex: "light.luz_sala"
     expressao: Optional[ExpressaoNode] = None  # ex: 0.09, "high" (para serviços que requerem valor)
     linha: int = 0
 
-
 @dataclass
 class BlocoSeNode:
-    """Bloco condicional dentro de ações: SE condicao ENTAO acoes [SENAO acoes] FIM"""
+    # Bloco condicional dentro de ações: SE condicao ENTAO acoes [SENAO acoes] FIM
     condicao: CondicaoNode
     acoes_entao: list       # List[AcaoNode]
     acoes_senao: list       # List[AcaoNode] ou lista vazia

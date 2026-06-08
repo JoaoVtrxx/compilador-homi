@@ -20,21 +20,18 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
         self._id_counter = int(time.time() * 1000)
 
     def _gerar_id(self):
-        # Gera um ID numérico único para a automação. Pseudoaleatório baseado no time com incremento
+        # Gera um ID numérico único para a automação. Pseudoaleatório baseado no time com incremento. O que importa é ele ser unico
         self._id_counter += 1
         return str(self._id_counter)
 
     def _extrair_dominio(self, entidade_id):
-        # Extrai o domínio de um entity_id.
+        # Extrai o domínio de um entity_id. ex.: light de light.luz_cozinha
         partes = entidade_id.split('.', 1)
         return partes[0] if len(partes) == 2 else 'switch'
 
-    # ============================================================
     # Geração de Gatilhos (Triggers)
-    # ============================================================
-
     def _gerar_gatilho(self, gatilho):
-        """Converte um GatilhoNode para dict YAML de trigger."""
+        # Converte um GatilhoNode para dict YAML de trigger.
         if isinstance(gatilho, GatilhoEstadoNode):
             trigger = {
                 'entity_id': [gatilho.entidade_id],
@@ -49,12 +46,9 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
                 'at': gatilho.horario,
             }
 
-    # ============================================================
     # Geração de Condições
-    # ============================================================
-
     def _gerar_condicao(self, condicao):
-        """Converte uma CondicaoNode para dict YAML de condition."""
+        # Converte uma CondicaoNode para dict YAML de condition.
         if condicao is None:
             return []
 
@@ -65,7 +59,7 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
                 'entity_id': condicao.entidade_id,
                 'state': str(condicao.expressao.valor),
             }
-            # Para !=, não há suporte direto - usamos template
+            # Para !=, não há suporte direto. usamos template
             if condicao.operador == '!=':
                 cond = {
                     'condition': 'template',
@@ -94,12 +88,9 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
 
         return [cond]
 
-    # ============================================================
     # Geração de Ações
-    # ============================================================
-
     def _gerar_acao(self, acao):
-        """Converte um AcaoNode para dict YAML de action."""
+        # Converte um AcaoNode para dict YAML de action.
 
         if isinstance(acao, AcaoLigarNode):
             dominio = self._extrair_dominio(acao.entidade_id)
@@ -124,12 +115,12 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
             }
 
         elif isinstance(acao, AcaoEsperarNode):
-            segs = acao.segundos
-            horas = int(segs // 3600)
-            segs_rest = segs % 3600
+            segundos = acao.segundos
+            horas = int(segundos // 3600)
+            segs_rest = segundos % 3600
             minutos = int(segs_rest // 60)
             segundos = int(segs_rest % 60)
-            milissegundos = int(round((segs - int(segs)) * 1000))
+            milissegundos = int(round((segundos - int(segundos)) * 1000))
 
             return {
                 'delay': {
@@ -178,15 +169,15 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
             data = {}
             if acao.expressao is not None:
                 partes = acao.servico.split('.', 1)
-                nome_servico = partes[1] if len(partes) == 2 else ''
-                data_key = SERVICO_COM_EXPRESSAO.get(nome_servico, 'value')
+                nome_servico = partes[1] if len(partes) == 2 else ''  # ex.: 'volume_set' de 'media_player.volume_set'
+                data_key = SERVICO_COM_EXPRESSAO.get(nome_servico, 'value') # pega a chave associado ao 'volume_set', 'volume_level', com padrão value
                 data[data_key] = acao.expressao.valor
-            return {
-                'action': acao.servico,
+            return {                                 # ex.: CHAMAR media_player.volume_set media_player.tv_da_sala 0.5
+                'action': acao.servico,              # 'media_player.volume_set'
                 'metadata': {},
-                'data': data,
+                'data': data,                        # 'volume_level: 0.5' (mapeado pelo mapa SERVICO_COM_EXPRESSAO)
                 'target': {
-                    'entity_id': acao.entidade_id,
+                    'entity_id': acao.entidade_id,   # 'media_player.tv_da_sala'
                 },
             }
 
@@ -199,12 +190,9 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
                 bloco['else'] = [self._gerar_acao(a) for a in acao.acoes_senao]
             return bloco
 
-    # ============================================================
     # Geração de Automação completa
-    # ============================================================
-
     def _gerar_automacao(self, auto):
-        """Converte uma AutomacaoNode para dict YAML completo."""
+        # Converte uma AutomacaoNode para dict YAML completo.
         automacao = {
             'id': self._gerar_id(),
             'alias': auto.alias,
@@ -216,17 +204,10 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
         }
         return automacao
 
-    # ============================================================
-    # Ponto de entrada: gera YAML a partir de ProgramaNode
-    # ============================================================
-
     def gerar(self, programa):
-        """
-        Gera o YAML completo a partir de um ProgramaNode.
-        Retorna a string YAML formatada.
-        """
+        # Gera o YAML completo a partir de um ProgramaNode.
         automacoes = [self._gerar_automacao(a) for a in programa.automacoes]
-        return yaml.dump(
+        return yaml.dump( # Retorna a string YAML formatada.
             automacoes,
             default_flow_style=False,
             allow_unicode=True,
