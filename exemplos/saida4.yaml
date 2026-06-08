@@ -1,4 +1,4 @@
-- id: '1780929315655'
+- id: '1780948268694'
   alias: Sala - ajustar volume
   description: ''
   triggers:
@@ -19,7 +19,7 @@
     data:
       message: Volume ajustado
   mode: single
-- id: '1780929315656'
+- id: '1780948268695'
   alias: Cozinha - ventilador
   description: ''
   triggers:
@@ -39,7 +39,7 @@
     target:
       entity_id: fan.ventilador_cozinha
   mode: single
-- id: '1780929315657'
+- id: '1780948268696'
   alias: Sala - desligar tela Alexa
   description: ''
   triggers:
@@ -60,7 +60,7 @@
     target:
       entity_id: alexa_devices.echo
   mode: single
-- id: '1780929315658'
+- id: '1780948268697'
   alias: Cozinha - trigger automação
   description: ''
   triggers:
@@ -76,7 +76,7 @@
     target:
       entity_id: automation.cozinha_ligar_luzes
   mode: single
-- id: '1780929315659'
+- id: '1780948268698'
   alias: Ajuste brilho
   description: ''
   triggers:

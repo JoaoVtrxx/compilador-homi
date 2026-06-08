@@ -1,4 +1,4 @@
-- id: '1780929302185'
+- id: '1780948193518'
   alias: Corredor - movimento duplo
   description: ''
   triggers:
@@ -31,7 +31,7 @@
     target:
       entity_id: light.corredor
   mode: single
-- id: '1780929302186'
+- id: '1780948193519'
   alias: Sala - desligar LED sanca
   description: ''
   triggers:
@@ -45,7 +45,7 @@
     target:
       entity_id: light.led_sanca
   mode: single
-- id: '1780929302187'
+- id: '1780948193520'
   alias: Suite - controle noturno
   description: ''
   triggers:
@@ -92,7 +92,7 @@
     data:
       message: 'Suite: luzes ajustadas'
   mode: single
-- id: '1780929302188'
+- id: '1780948193521'
   alias: Cozinha - ligar luzes via automação
   description: ''
   triggers:
