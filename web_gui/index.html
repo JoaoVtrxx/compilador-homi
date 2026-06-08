@@ -75,7 +75,7 @@
         }
 
         .logo-icon {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            background: var(--primary);
             width: 36px;
             height: 36px;
             border-radius: 8px;
@@ -84,16 +84,14 @@
             justify-content: center;
             font-weight: bold;
             font-size: 1.2rem;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            color: white;
         }
 
         .logo-title h1 {
             font-size: 1.25rem;
             font-weight: 700;
             letter-spacing: 0.5px;
-            background: linear-gradient(to right, #3b82f6, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--primary);
         }
 
         .logo-title p {
@@ -153,8 +151,6 @@
             font-size: 0.875rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 0 10px var(--primary-glow);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -162,12 +158,10 @@
 
         .btn-compile:hover {
             background-color: var(--primary-hover);
-            box-shadow: 0 0 15px var(--primary-glow);
-            transform: translateY(-1px);
         }
 
         .btn-compile:active {
-            transform: translateY(0);
+            background-color: var(--primary);
         }
 
         /* Main Workspace Layout */
@@ -256,22 +250,18 @@
             border-radius: 50%;
             background-color: var(--text-muted);
             display: inline-block;
-            transition: background-color 0.3s;
         }
 
         .status-dot.success {
             background-color: var(--success);
-            box-shadow: 0 0 8px var(--success);
         }
 
         .status-dot.error {
             background-color: var(--danger);
-            box-shadow: 0 0 8px var(--danger);
         }
 
         .status-dot.warning {
             background-color: var(--warning);
-            box-shadow: 0 0 8px var(--warning);
         }
 
         .console-output {
@@ -383,16 +373,13 @@
             border-bottom: 1px solid var(--border-color);
             padding: 16px;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
             gap: 6px;
-            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .flow-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            background-color: var(--bg-card);
         }
 
         .flow-card.trigger {
@@ -534,7 +521,6 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         table {
@@ -678,11 +664,6 @@
             color: var(--text-muted);
             gap: 12px;
             text-align: center;
-        }
-
-        .empty-icon {
-            font-size: 2.5rem;
-            opacity: 0.5;
         }
 
         .error-card {
@@ -838,7 +819,6 @@ automacao &quot;Minha Automacao&quot;
                 <!-- Tab: Flowchart -->
                 <div class="tab-pane active" id="tab-flow">
                     <div class="empty-state" id="flow-empty">
-                        <div class="empty-icon">📊</div>
                         <h3>Nenhum fluxo para exibir</h3>
                         <p>Escreva um código válido e compile para visualizar o fluxograma da automação.</p>
                     </div>
@@ -848,7 +828,6 @@ automacao &quot;Minha Automacao&quot;
                 <!-- Tab: YAML -->
                 <div class="tab-pane" id="tab-yaml">
                     <div class="empty-state" id="yaml-empty">
-                        <div class="empty-icon">📄</div>
                         <h3>Nenhum código gerado</h3>
                         <p>O YAML será exibido aqui assim que a compilação for concluída com sucesso.</p>
                     </div>
@@ -865,7 +844,6 @@ automacao &quot;Minha Automacao&quot;
                 <!-- Tab: Symbols -->
                 <div class="tab-pane" id="tab-symbols">
                     <div class="empty-state" id="symbols-empty">
-                        <div class="empty-icon">🔑</div>
                         <h3>Tabela de Símbolos vazia</h3>
                         <p>Compile um script válido para ver as variáveis e entidades registradas pelo analisador
                             semântico.</p>
@@ -888,7 +866,6 @@ automacao &quot;Minha Automacao&quot;
                 <!-- Tab: AST -->
                 <div class="tab-pane" id="tab-ast">
                     <div class="empty-state" id="ast-empty">
-                        <div class="empty-icon">🌲</div>
                         <h3>AST não construída</h3>
                         <p>A árvore sintática estruturada (Abstract Syntax Tree) será mostrada aqui pós-parsing.</p>
                     </div>
@@ -898,7 +875,6 @@ automacao &quot;Minha Automacao&quot;
                 <!-- Tab: Tokens -->
                 <div class="tab-pane" id="tab-tokens">
                     <div class="empty-state" id="tokens-empty">
-                        <div class="empty-icon">🪙</div>
                         <h3>Nenhum token listado</h3>
                         <p>Escreva código e compile para inspecionar os tokens extraídos na análise léxica.</p>
                     </div>
@@ -1314,7 +1290,7 @@ automacao &quot;Minha Automacao&quot;
             titleCard.style.width = '100%';
             titleCard.innerHTML = `
                 <div class="flow-card-header" style="color: var(--color-control);">Automação</div>
-                <div class="flow-card-title">✨ "${auto.alias}"</div>
+                <div class="flow-card-title">"${auto.alias}"</div>
                 <div class="flow-card-detail">Linha de definição: ${auto.linha}</div>
             `;
             root.appendChild(titleCard);
@@ -1338,12 +1314,12 @@ automacao &quot;Minha Automacao&quot;
                     if (g.node_type === 'GatilhoEstadoNode') {
                         const val = g.expressao ? g.expressao.valor : '';
                         triggerBody += `
-                            <div class="flow-card-title">🔌 ${g.entidade_id}</div>
+                            <div class="flow-card-title">${g.entidade_id}</div>
                             <div class="flow-card-detail">Muda o estado para: <strong>"${val}"</strong></div>
                         `;
                     } else if (g.node_type === 'GatilhoHorarioNode') {
                         triggerBody += `
-                            <div class="flow-card-title">⏰ Horário</div>
+                            <div class="flow-card-title">Horário</div>
                             <div class="flow-card-detail">Dispara exatamente às: <strong>${g.horario}</strong></div>
                         `;
                     }
@@ -1372,12 +1348,12 @@ automacao &quot;Minha Automacao&quot;
                     if (cond.node_type === 'CondicaoNode') {
                         const val = cond.expressao ? cond.expressao.valor : '';
                         condHtml += `
-                            <div class="flow-card-title">🔍 ${cond.entidade_id}</div>
+                            <div class="flow-card-title">${cond.entidade_id}</div>
                             <div class="flow-card-detail">Deve ser: <strong>${cond.operador} "${val}"</strong></div>
                         `;
                     } else if (cond.node_type === 'CondicaoHorarioNode') {
                         condHtml += `
-                            <div class="flow-card-title">⏰ Horário</div>
+                            <div class="flow-card-title">Horário</div>
                             <div class="flow-card-detail">Entre: <strong>${cond.depois}</strong> e <strong>${cond.antes}</strong></div>
                         `;
                     }
@@ -1442,12 +1418,12 @@ automacao &quot;Minha Automacao&quot;
                             if (cond.node_type === 'CondicaoNode') {
                                 const val = cond.expressao ? cond.expressao.valor : '';
                                 condHtml += `
-                                    <div class="flow-card-title">❓ ${cond.entidade_id}</div>
+                                    <div class="flow-card-title">${cond.entidade_id}</div>
                                     <div class="flow-card-detail">Checa se: <strong>${cond.operador} "${val}"</strong></div>
                                 `;
                             } else if (cond.node_type === 'CondicaoHorarioNode') {
                                 condHtml += `
-                                    <div class="flow-card-title">⏰ Horário</div>
+                                    <div class="flow-card-title">Horário</div>
                                     <div class="flow-card-detail">Entre: <strong>${cond.depois}</strong> e <strong>${cond.antes}</strong></div>
                                 `;
                             }
@@ -1510,36 +1486,36 @@ automacao &quot;Minha Automacao&quot;
                     if (action.node_type === 'AcaoLigarNode') {
                         content = `
                             <div class="flow-card-header">Ligar Atuador</div>
-                            <div class="flow-card-title">💡 Ligar ${action.entidade_id}</div>
+                            <div class="flow-card-title">Ligar ${action.entidade_id}</div>
                         `;
                     } else if (action.node_type === 'AcaoDesligarNode') {
                         content = `
                             <div class="flow-card-header">Desligar Atuador</div>
-                            <div class="flow-card-title">🌑 Desligar ${action.entidade_id}</div>
+                            <div class="flow-card-title">Desligar ${action.entidade_id}</div>
                         `;
                     } else if (action.node_type === 'AcaoEsperarNode') {
                         content = `
                             <div class="flow-card-header">Esperar (Delay)</div>
-                            <div class="flow-card-title">⏳ Aguardar ${action.tempo_raw}</div>
+                            <div class="flow-card-title">Aguardar ${action.tempo_raw}</div>
                             <div class="flow-card-detail">Equivale a: ${action.segundos} segundos</div>
                         `;
                     } else if (action.node_type === 'AcaoNotificarNode') {
                         content = `
                             <div class="flow-card-header">Enviar Notificação</div>
-                            <div class="flow-card-title">💬 Notificar "${action.destino}"</div>
+                            <div class="flow-card-title">Notificar "${action.destino}"</div>
                             <div class="flow-card-detail">Mensagem: "${action.mensagem}"</div>
                         `;
                     } else if (action.node_type === 'AcaoDefinirNode') {
                         const val = action.expressao ? action.expressao.valor : '';
                         content = `
                             <div class="flow-card-header">Definir Parâmetro</div>
-                            <div class="flow-card-title">⚙️ Ajustar ${action.entidade_id}</div>
+                            <div class="flow-card-title">Ajustar ${action.entidade_id}</div>
                             <div class="flow-card-detail">Novo valor: <strong>"${val}"</strong></div>
                         `;
                     } else if (action.node_type === 'AcaoChamarNode') {
                         content = `
                             <div class="flow-card-header">Chamada de Serviço</div>
-                            <div class="flow-card-title">🛠️ Chamar serviço "${action.servico}"</div>
+                            <div class="flow-card-title">Chamar serviço "${action.servico}"</div>
                             <div class="flow-card-detail">Entidade alvo: ${action.entidade_id}</div>
                         `;
                     }
@@ -1554,7 +1530,7 @@ automacao &quot;Minha Automacao&quot;
         function createConnector() {
             const div = document.createElement('div');
             div.className = 'flow-connector';
-            div.innerHTML = '⬇️';
+            div.innerHTML = '|';
             return div;
         }
 
