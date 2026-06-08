@@ -1,4 +1,4 @@
-# Exemplo 5: Múltiplas condições com E + modo reiniciar
+# Exemplo 5: Múltiplas condições com E + modo reiniciar + condição de horário
 # Inspirado na automação "Corda Corredor - movimento"
 
 automacao "Corda Corredor - movimento"
@@ -7,12 +7,16 @@ quando
     binary_sensor.tz3000_6ygjfyll_ts0202 mudar para "on" ou
     binary_sensor.motion_sensor_movimento mudar para "on"
 se
-    light.corda_led_corredor == "off" e
     switch.interruptor_geral == "on" e
-    alarm_control_panel.alarme == "disarmed"
+    alarm_control_panel.alarme == "disarmed" e
+    light.corda_led_corredor == "off"
 entao
     ligar light.corda_led_corredor
-    esperar 45s
+    se horario "01:15:00" ate "12:00:00" entao
+        esperar 45s
+    senao
+        esperar 105s
+    fim
     desligar light.corda_led_corredor
 modo "reiniciar"
 fim

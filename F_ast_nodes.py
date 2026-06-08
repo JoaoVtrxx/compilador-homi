@@ -36,6 +36,13 @@ class CondicaoNode:
     expressao: ExpressaoNode
     linha: int = 0
 
+@dataclass
+class CondicaoHorarioNode:
+    # Condição de horário: HORARIO STRING ATE STRING
+    depois: str        # ex: "01:15:00" (after)
+    antes: str         # ex: "12:00:00" (before)
+    linha: int = 0
+
 # Ações:
 
 @dataclass

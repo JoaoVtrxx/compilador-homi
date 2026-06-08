@@ -1,4 +1,4 @@
-- id: '1780928024772'
+- id: '1780929409030'
   alias: Corda Corredor - movimento
   description: ''
   triggers:
@@ -16,25 +16,36 @@
     trigger: state
   conditions:
   - condition: state
-    entity_id: light.corda_led_corredor
-    state: 'off'
-  - condition: state
     entity_id: switch.interruptor_geral
     state: 'on'
   - condition: state
     entity_id: alarm_control_panel.alarme
     state: disarmed
+  - condition: state
+    entity_id: light.corda_led_corredor
+    state: 'off'
   actions:
   - action: light.turn_on
     metadata: {}
     data: {}
     target:
       entity_id: light.corda_led_corredor
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 45
-      milliseconds: 0
+  - if:
+    - condition: time
+      after: 01:15:00
+      before: '12:00:00'
+    then:
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 45
+        milliseconds: 0
+    else:
+    - delay:
+        hours: 0
+        minutes: 1
+        seconds: 45
+        milliseconds: 0
   - action: light.turn_off
     metadata: {}
     data: {}

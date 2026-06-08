@@ -18,6 +18,7 @@
     OU            ->  ou
     E             ->  e
     MODO          ->  modo
+    ATE           ->  ate
 
     ENTIDADE_ID   ->  identificador de entidade (ex: sensor.temperatura_sala, light.luz_teto)
     TEMPO         ->  valor numérico com unidade de tempo (ex: 10s, 5min, 1h, 500ms)
@@ -83,33 +84,34 @@
     R13: lista_condicoes  -> condicao
 
     R14: condicao         -> ENTIDADE_ID operador expressao
+    R15: condicao         -> HORARIO STRING ATE STRING       # ex.: 'horario "01:15:00" ate "12:00:00"'
 
-    R15: operador         -> MAIOR
-    R16: operador         -> MENOR
-    R17: operador         -> IGUAL
-    R18: operador         -> MAIOR_IGUAL
-    R19: operador         -> MENOR_IGUAL
-    R20: operador         -> DIFERENTE
+    R16: operador         -> MAIOR
+    R17: operador         -> MENOR
+    R18: operador         -> IGUAL
+    R19: operador         -> MAIOR_IGUAL
+    R20: operador         -> MENOR_IGUAL
+    R21: operador         -> DIFERENTE
 
-    R21: expressao        -> NUMERO
-    R22: expressao        -> STRING
+    R22: expressao        -> NUMERO
+    R23: expressao        -> STRING
 
-    R23: lista_acoes      -> lista_acoes acao
-    R24: lista_acoes      -> acao
+    R24: lista_acoes      -> lista_acoes acao
+    R25: lista_acoes      -> acao
 
-    R25: acao             -> LIGAR ENTIDADE_ID
-    R26: acao             -> DESLIGAR ENTIDADE_ID
-    R27: acao             -> ESPERAR TEMPO
-    R28: acao             -> NOTIFICAR STRING PARA STRING    # ex.: 'notificar "Luzes ajustadas" para "mobile_zfold4"'
-    R29: acao             -> DEFINIR ENTIDADE_ID expressao
-    R30: acao             -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao  # ex.: 'chamar media_player.volume_set media_player.music_frame 0.09'
-    R31: acao             -> CHAMAR ENTIDADE_ID ENTIDADE_ID            # ex.: 'chamar automation.trigger automation.cozinha_ligar_luzes'
-    R32: acao             -> bloco_se
+    R26: acao             -> LIGAR ENTIDADE_ID
+    R27: acao             -> DESLIGAR ENTIDADE_ID
+    R28: acao             -> ESPERAR TEMPO
+    R29: acao             -> NOTIFICAR STRING PARA STRING    # ex.: 'notificar "Luzes ajustadas" para "mobile_zfold4"'
+    R30: acao             -> DEFINIR ENTIDADE_ID expressao
+    R31: acao             -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao  # ex.: 'chamar media_player.volume_set media_player.music_frame 0.09'
+    R32: acao             -> CHAMAR ENTIDADE_ID ENTIDADE_ID            # ex.: 'chamar automation.trigger automation.cozinha_ligar_luzes'
+    R33: acao             -> bloco_se
 
-    R33: bloco_se         -> SE lista_condicoes ENTAO lista_acoes bloco_senao_opt FIM
+    R34: bloco_se         -> SE lista_condicoes ENTAO lista_acoes bloco_senao_opt FIM
 
-    R34: bloco_senao_opt  -> SENAO lista_acoes
-    R35: bloco_senao_opt  -> e  (vazio)
+    R35: bloco_senao_opt  -> SENAO lista_acoes
+    R36: bloco_senao_opt  -> e  (vazio)
 
-    R36: modo_opt         -> MODO STRING                     # ex.: 'modo "reiniciar"' ou 'modo "fila"'
-    R37: modo_opt         -> e  (vazio)                      # padrão: single
+    R37: modo_opt         -> MODO STRING                     # ex.: 'modo "reiniciar"' ou 'modo "fila"'
+    R38: modo_opt         -> e  (vazio)                      # padrão: single

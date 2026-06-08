@@ -1,7 +1,7 @@
 from F_ast_nodes import (
     ProgramaNode, AutomacaoNode,
     GatilhoEstadoNode, GatilhoHorarioNode,
-    CondicaoNode, ExpressaoNode,
+    CondicaoNode, CondicaoHorarioNode, ExpressaoNode,
     AcaoLigarNode, AcaoDesligarNode, AcaoEsperarNode,
     AcaoNotificarNode, AcaoDefinirNode, AcaoChamarNode,
     BlocoSeNode,
@@ -89,7 +89,7 @@ class AnalisadorSemantico:
         dominio = self._extrair_dominio(entidade_id)
         if dominio and dominio not in DOMINIOS:
             self.avisos.append(
-                f"Aviso (linha {linha}): Domínio '{dominio}' da entidade "
+                f"Aviso (linha {linha}): Domínio '{dominio}' da entidade " # Não bloqueia se o dominio nao esta registrado, mas avisa
                 f"'{entidade_id}' não é um domínio padrão do Home Assistant."
             )
 
@@ -210,6 +210,19 @@ class AnalisadorSemantico:
 
     def _analisar_condicao(self, condicao):
         # Analisa uma condição.
+        if isinstance(condicao, CondicaoHorarioNode):
+            # Validar formato de horário (HH:MM:SS) nos campos depois e antes
+            import re
+            for campo, nome in [(condicao.depois, 'depois'), (condicao.antes, 'antes')]:
+                if not re.match(r'^\d{2}:\d{2}:\d{2}$', campo):
+                    self.avisos.append(
+                        f"Aviso (linha {condicao.linha}): Formato de horário "
+                        f"'{campo}' ({nome}) pode não ser válido. "
+                        f"Use o formato HH:MM:SS."
+                    )
+            return
+
+        # Condição normal (CondicaoNode)
         self._registrar_entidade(condicao.entidade_id, condicao.linha)
         self._validar_dominio(condicao.entidade_id, condicao.linha)
 

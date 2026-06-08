@@ -7,7 +7,7 @@ from B_lexer import tokens
 from F_ast_nodes import (
     ProgramaNode, AutomacaoNode,
     GatilhoEstadoNode, GatilhoHorarioNode,
-    CondicaoNode, ExpressaoNode,
+    CondicaoNode, CondicaoHorarioNode, ExpressaoNode,
     AcaoLigarNode, AcaoDesligarNode, AcaoEsperarNode,
     AcaoNotificarNode, AcaoDefinirNode, AcaoChamarNode,
     BlocoSeNode,
@@ -109,7 +109,7 @@ def p_lista_condicoes_unica(p):
     '''lista_condicoes : condicao'''
     p[0] = [p[1]]
 
-def p_empty(p):
+def p_empty(p): # R13 tambem
     '''empty :'''
     pass
 
@@ -123,7 +123,16 @@ def p_condicao(p):
         linha=p.lineno(1),
     )
 
-# R15-R20: operador -> MAIOR | MENOR | IGUAL | MAIOR_IGUAL | MENOR_IGUAL | DIFERENTE
+# R15: condicao -> HORARIO STRING ATE STRING
+def p_condicao_horario(p):
+    '''condicao : HORARIO STRING ATE STRING'''
+    p[0] = CondicaoHorarioNode(
+        depois=p[2],
+        antes=p[4],
+        linha=p.lineno(1),
+    )
+
+# R16-R21: operador -> MAIOR | MENOR | IGUAL | MAIOR_IGUAL | MENOR_IGUAL | DIFERENTE
 def p_operador(p):
     '''operador : MAIOR
                 | MENOR
@@ -133,7 +142,7 @@ def p_operador(p):
                 | DIFERENTE'''
     p[0] = p[1]
 
-# R21-R22: expressao -> NUMERO | STRING
+# R22-R23: expressao -> NUMERO | STRING
 def p_expressao_numero(p):
     '''expressao : NUMERO'''
     p[0] = ExpressaoNode(tipo='NUMERO', valor=p[1], linha=p.lineno(1))
@@ -142,7 +151,7 @@ def p_expressao_string(p):
     '''expressao : STRING'''
     p[0] = ExpressaoNode(tipo='STRING', valor=p[1], linha=p.lineno(1))
 
-# R23-R24: lista_acoes -> lista_acoes acao | acao
+# R24-R25: lista_acoes -> lista_acoes acao | acao
 def p_lista_acoes_mult(p):
     '''lista_acoes : lista_acoes acao'''
     p[0] = p[1] + [p[2]]
@@ -151,17 +160,17 @@ def p_lista_acoes_unica(p):
     '''lista_acoes : acao'''
     p[0] = [p[1]]
 
-# R25: acao -> LIGAR ENTIDADE_ID
+# R26: acao -> LIGAR ENTIDADE_ID
 def p_acao_ligar(p):
     '''acao : LIGAR ENTIDADE_ID'''
     p[0] = AcaoLigarNode(entidade_id=p[2], linha=p.lineno(1))
 
-# R26: acao -> DESLIGAR ENTIDADE_ID
+# R27: acao -> DESLIGAR ENTIDADE_ID
 def p_acao_desligar(p):
     '''acao : DESLIGAR ENTIDADE_ID'''
     p[0] = AcaoDesligarNode(entidade_id=p[2], linha=p.lineno(1))
 
-# R27: acao -> ESPERAR TEMPO
+# R28: acao -> ESPERAR TEMPO
 def p_acao_esperar(p):
     '''acao : ESPERAR TEMPO'''
     p[0] = AcaoEsperarNode(
@@ -170,32 +179,32 @@ def p_acao_esperar(p):
         linha=p.lineno(1),
     )
 
-# R28: acao -> NOTIFICAR STRING PARA STRING
+# R29: acao -> NOTIFICAR STRING PARA STRING
 def p_acao_notificar(p):
     '''acao : NOTIFICAR STRING PARA STRING'''
     p[0] = AcaoNotificarNode(mensagem=p[2], destino=p[4], linha=p.lineno(1))
 
-# R29: acao -> DEFINIR ENTIDADE_ID expressao
+# R30: acao -> DEFINIR ENTIDADE_ID expressao
 def p_acao_definir(p):
     '''acao : DEFINIR ENTIDADE_ID expressao'''
     p[0] = AcaoDefinirNode(entidade_id=p[2], expressao=p[3], linha=p.lineno(1))
 
-# R30: acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao
+# R31: acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao
 def p_acao_chamar_com_expressao(p):
     '''acao : CHAMAR ENTIDADE_ID ENTIDADE_ID expressao'''
     p[0] = AcaoChamarNode(servico=p[2], entidade_id=p[3], expressao=p[4], linha=p.lineno(1))
 
-# R31: acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID
+# R32: acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID
 def p_acao_chamar_sem_expressao(p):
     '''acao : CHAMAR ENTIDADE_ID ENTIDADE_ID'''
     p[0] = AcaoChamarNode(servico=p[2], entidade_id=p[3], linha=p.lineno(1))
 
-# R32: acao -> bloco_se
+# R33: acao -> bloco_se
 def p_acao_bloco_se(p):
     '''acao : bloco_se'''
     p[0] = p[1]
 
-# R33: bloco_se -> SE lista_condicoes ENTAO lista_acoes bloco_senao_opt FIM
+# R34: bloco_se -> SE lista_condicoes ENTAO lista_acoes bloco_senao_opt FIM
 def p_bloco_se(p):
     '''bloco_se : SE lista_condicoes ENTAO lista_acoes bloco_senao_opt FIM'''
     p[0] = BlocoSeNode(
@@ -205,7 +214,7 @@ def p_bloco_se(p):
         linha=p.lineno(1),
     )
 
-# R34-R35: bloco_senao_opt -> SENAO lista_acoes | e
+# R35-R36: bloco_senao_opt -> SENAO lista_acoes | e
 def p_bloco_senao_opt_presente(p):
     '''bloco_senao_opt : SENAO lista_acoes'''
     p[0] = p[2]
@@ -214,7 +223,7 @@ def p_bloco_senao_opt_vazia(p):
     '''bloco_senao_opt : empty'''
     p[0] = []          # É bem melhor retornar lista vazia, pois assim o "BloseSeNode" sempre terá uma lista nas acoes_senao (mesmo que vazia).
 
-# R36-R37: modo_opt -> MODO STRING | e  (Modo de execução opcional)
+# R37-R38: modo_opt -> MODO STRING | e  (Modo de execução opcional)
 def p_modo_opt_presente(p):
     '''modo_opt : MODO STRING'''
     modo_raw = p[2].lower().strip()

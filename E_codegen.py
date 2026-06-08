@@ -5,7 +5,7 @@ import time
 from F_ast_nodes import (
     ProgramaNode, AutomacaoNode,
     GatilhoEstadoNode, GatilhoHorarioNode,
-    CondicaoNode,
+    CondicaoNode, CondicaoHorarioNode,
     AcaoLigarNode, AcaoDesligarNode, AcaoEsperarNode,
     AcaoNotificarNode, AcaoDefinirNode, AcaoChamarNode,
     BlocoSeNode,
@@ -48,9 +48,15 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
 
     # Geração de Condições
     def _gerar_condicao(self, condicao):
-        # Converte uma CondicaoNode para dict YAML de condition.
+        # Converte uma CondicaoNode ou CondicaoHorarioNode para dict YAML de condition.
 
-        # Se o operador é == ou !=, usamos condition: state
+        # Condição de horário (condition: time)
+        if isinstance(condicao, CondicaoHorarioNode):
+            return {
+                'condition': 'time',
+                'after': condicao.depois,
+                'before': condicao.antes,
+            }
         if condicao.operador in ('==', '!='):
             cond = {
                 'condition': 'state',
