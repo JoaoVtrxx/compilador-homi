@@ -71,10 +71,12 @@ def main():
     print(f" AST construída com sucesso.")
     print(f" Automações encontradas: {len(ast.automacoes)}")
     for i, auto in enumerate(ast.automacoes, 1):
-        cond_str = "com condição" if auto.condicao else "sem condição"
+        n_cond = len(auto.condicoes)
+        cond_str = f"com {n_cond} condição(ões)" if n_cond > 0 else "sem condição"
         print(f"  [{i}] \"{auto.alias}\" - "
               f"{len(auto.gatilhos)} gatilho(s), "
-              f"{len(auto.acoes)} ações, {cond_str}")
+              f"{len(auto.acoes)} ações, {cond_str}, "
+              f"modo: {auto.modo}")
 
     print()
 

@@ -49,8 +49,6 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
     # Geração de Condições
     def _gerar_condicao(self, condicao):
         # Converte uma CondicaoNode para dict YAML de condition.
-        if condicao is None:
-            return []
 
         # Se o operador é == ou !=, usamos condition: state
         if condicao.operador in ('==', '!='):
@@ -68,7 +66,7 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
                         f"!= '{condicao.expressao.valor}' }}}}"
                     ),
                 }
-            return [cond]
+            return cond
 
         # Para operadores numéricos (>, <, >=, <=), usamos numeric_state
         cond = {
@@ -86,7 +84,11 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
         elif condicao.operador == '<=':
             cond['below'] = valor + (0.001 if isinstance(valor, float) else 1)
 
-        return [cond]
+        return cond
+
+    def _gerar_condicoes(self, condicoes):
+        # Converte uma lista de CondicaoNode para lista de dicts YAML.
+        return [self._gerar_condicao(c) for c in condicoes]
 
     # Geração de Ações
     def _gerar_acao(self, acao):
@@ -183,7 +185,7 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
 
         elif isinstance(acao, BlocoSeNode):
             bloco = {
-                'if': self._gerar_condicao(acao.condicao),
+                'if': self._gerar_condicoes(acao.condicoes),
                 'then': [self._gerar_acao(a) for a in acao.acoes_entao],
             }
             if acao.acoes_senao:
@@ -198,9 +200,9 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
             'alias': auto.alias,
             'description': '',
             'triggers': [self._gerar_gatilho(g) for g in auto.gatilhos],
-            'conditions': self._gerar_condicao(auto.condicao),
+            'conditions': self._gerar_condicoes(auto.condicoes),
             'actions': [self._gerar_acao(a) for a in auto.acoes],
-            'mode': 'single',
+            'mode': auto.modo,
         }
         return automacao
 

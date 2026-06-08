@@ -1,0 +1,93 @@
+- id: '1780928016952'
+  alias: Sala - ajustar volume
+  description: ''
+  triggers:
+  - entity_id:
+    - binary_sensor.sala_motion
+    to: 'on'
+    trigger: state
+  conditions: []
+  actions:
+  - action: media_player.volume_set
+    metadata: {}
+    data:
+      volume_level: 0.09
+    target:
+      entity_id: media_player.music_frame
+  - action: notify.mobile_app_zfold4
+    metadata: {}
+    data:
+      message: Volume ajustado
+  mode: single
+- id: '1780928016953'
+  alias: Cozinha - ventilador
+  description: ''
+  triggers:
+  - entity_id:
+    - sensor.temperatura_cozinha
+    to: hot
+    trigger: state
+  conditions:
+  - condition: numeric_state
+    entity_id: sensor.temperatura_cozinha
+    above: 30
+  actions:
+  - action: fan.set_speed
+    metadata: {}
+    data:
+      speed: high
+    target:
+      entity_id: fan.ventilador_cozinha
+  mode: single
+- id: '1780928016954'
+  alias: Sala - desligar tela Alexa
+  description: ''
+  triggers:
+  - trigger: time
+    at: '23:00:00'
+  conditions: []
+  actions:
+  - action: alexa_devices.send_text_command
+    metadata: {}
+    data:
+      text_command: desligar tela
+    target:
+      entity_id: alexa_devices.echo_show
+  - action: alexa_devices.send_sound
+    metadata: {}
+    data:
+      sound: amzn_sfx_doorbell_chime_01
+    target:
+      entity_id: alexa_devices.echo
+  mode: single
+- id: '1780928016955'
+  alias: Cozinha - trigger automação
+  description: ''
+  triggers:
+  - entity_id:
+    - sensor.luminosidade_cozinha
+    to: low
+    trigger: state
+  conditions: []
+  actions:
+  - action: automation.trigger
+    metadata: {}
+    data: {}
+    target:
+      entity_id: automation.cozinha_ligar_luzes
+  mode: single
+- id: '1780928016956'
+  alias: Ajuste brilho
+  description: ''
+  triggers:
+  - trigger: time
+    at: '20:00:00'
+  conditions: []
+  actions:
+  - action: input_number.set_value
+    metadata: {}
+    data:
+      value: 80
+    target:
+      entity_id: input_number.brilho_sala
+  mode: single

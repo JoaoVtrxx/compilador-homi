@@ -82,7 +82,7 @@ class AcaoChamarNode:
 @dataclass
 class BlocoSeNode:
     # Bloco condicional dentro de ações: SE condicao ENTAO acoes [SENAO acoes] FIM
-    condicao: CondicaoNode
+    condicoes: list         # List[CondicaoNode] (1 ou mais condições ligadas por E)
     acoes_entao: list       # List[AcaoNode]
     acoes_senao: list       # List[AcaoNode] ou lista vazia
     linha: int = 0
@@ -107,8 +107,9 @@ GatilhoNode = Union[GatilhoEstadoNode, GatilhoHorarioNode]
 class AutomacaoNode:
     alias: str                                 # Nome da automação (STRING)
     gatilhos: List[GatilhoNode]                # Lista de gatilhos (1 ou mais)
-    condicao: Optional[CondicaoNode]           # Condição opcional
+    condicoes: List[CondicaoNode]              # Lista de condições (0 ou mais, ligadas por E)
     acoes: List[AcaoNode]                      # Lista de ações (1 ou mais)
+    modo: str = 'single'                       # Modo de execução: 'single', 'restart' ou 'queued'
     linha: int = 0
 
 # Programa (raiz da AST, lista de automacoes)

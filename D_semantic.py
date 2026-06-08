@@ -185,9 +185,9 @@ class AnalisadorSemantico:
         for gatilho in auto.gatilhos:
             self._analisar_gatilho(gatilho)
 
-        # Verificar condição
-        if auto.condicao:
-            self._analisar_condicao(auto.condicao)
+        # Verificar condições (lista)
+        for condicao in auto.condicoes:
+            self._analisar_condicao(condicao)
 
         # Verificar ações
         for acao in auto.acoes:
@@ -255,7 +255,8 @@ class AnalisadorSemantico:
             self._validar_servico(acao.servico, acao.entidade_id, acao.expressao, acao.linha) # Verifica se o serviço é válido para o domínio
 
         elif isinstance(acao, BlocoSeNode):
-            self._analisar_condicao(acao.condicao)
+            for cond in acao.condicoes:
+                self._analisar_condicao(cond)
             for sub_acao in acao.acoes_entao:
                 self._analisar_acao(sub_acao)
             for sub_acao in acao.acoes_senao:

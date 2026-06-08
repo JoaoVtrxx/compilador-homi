@@ -5,7 +5,7 @@ tokens = (
     # Palavras reservadas
     'AUTOMACAO', 'FIM', 'QUANDO', 'SE', 'SENAO', 'ENTAO',
     'LIGAR', 'DESLIGAR', 'ESPERAR', 'NOTIFICAR', 'DEFINIR', 'CHAMAR',
-    'MUDAR', 'PARA', 'HORARIO', 'OU',
+    'MUDAR', 'PARA', 'HORARIO', 'OU', 'E', 'MODO',
     # Literais e valores
     'ENTIDADE_ID', 'TEMPO', 'NUMERO', 'STRING',
     # Operadores relacionais
@@ -32,6 +32,8 @@ reserved = {
     'para':      'PARA',
     'horario':   'HORARIO',
     'ou':        'OU',
+    'e':         'E',
+    'modo':      'MODO',
 }
 
 # Ordem importa no PLY, pois ele lê as regras de cima para baixo e para quando encontra uma correspondência.

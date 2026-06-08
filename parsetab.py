@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'SLR'
 
-_lr_signature = 'AUTOMACAO CHAMAR DEFINIR DESLIGAR DIFERENTE ENTAO ENTIDADE_ID ESPERAR FIM HORARIO IGUAL LIGAR MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL MUDAR NOTIFICAR NUMERO OU PARA PONTO_VIRGULA QUANDO SE SENAO STRING TEMPOprograma : lista_automacoeslista_automacoes : lista_automacoes PONTO_VIRGULA automacaolista_automacoes : automacaoautomacao : AUTOMACAO STRING gatilho_bloco condicao_opt ENTAO lista_acoes FIMgatilho_bloco : QUANDO lista_gatilhoslista_gatilhos : lista_gatilhos OU gatilholista_gatilhos : gatilhogatilho : ENTIDADE_ID MUDAR PARA expressaogatilho : HORARIO STRINGcondicao_opt : SE condicaocondicao_opt : emptyempty :condicao : ENTIDADE_ID operador expressaooperador : MAIOR\n| MENOR\n| IGUAL\n| MAIOR_IGUAL\n| MENOR_IGUAL\n| DIFERENTEexpressao : NUMEROexpressao : STRINGlista_acoes : lista_acoes acaolista_acoes : acaoacao : LIGAR ENTIDADE_IDacao : DESLIGAR ENTIDADE_IDacao : ESPERAR TEMPOacao : NOTIFICAR STRING PARA STRINGacao : DEFINIR ENTIDADE_ID expressaoacao : CHAMAR ENTIDADE_ID ENTIDADE_ID expressaoacao : CHAMAR ENTIDADE_ID ENTIDADE_IDacao : bloco_sebloco_se : SE condicao ENTAO lista_acoes bloco_senao_opt FIMbloco_senao_opt : SENAO lista_acoesbloco_senao_opt : empty'
+_lr_signature = 'AUTOMACAO CHAMAR DEFINIR DESLIGAR DIFERENTE E ENTAO ENTIDADE_ID ESPERAR FIM HORARIO IGUAL LIGAR MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL MODO MUDAR NOTIFICAR NUMERO OU PARA PONTO_VIRGULA QUANDO SE SENAO STRING TEMPOprograma : lista_automacoeslista_automacoes : lista_automacoes PONTO_VIRGULA automacaolista_automacoes : automacaoautomacao : AUTOMACAO STRING gatilho_bloco condicao_opt ENTAO lista_acoes modo_opt FIMgatilho_bloco : QUANDO lista_gatilhoslista_gatilhos : lista_gatilhos OU gatilholista_gatilhos : gatilhogatilho : ENTIDADE_ID MUDAR PARA expressaogatilho : HORARIO STRINGcondicao_opt : SE lista_condicoescondicao_opt : emptylista_condicoes : lista_condicoes E condicaolista_condicoes : condicaoempty :condicao : ENTIDADE_ID operador expressaooperador : MAIOR\n| MENOR\n| IGUAL\n| MAIOR_IGUAL\n| MENOR_IGUAL\n| DIFERENTEexpressao : NUMEROexpressao : STRINGlista_acoes : lista_acoes acaolista_acoes : acaoacao : LIGAR ENTIDADE_IDacao : DESLIGAR ENTIDADE_IDacao : ESPERAR TEMPOacao : NOTIFICAR STRING PARA STRINGacao : DEFINIR ENTIDADE_ID expressaoacao : CHAMAR ENTIDADE_ID ENTIDADE_ID expressaoacao : CHAMAR ENTIDADE_ID ENTIDADE_IDacao : bloco_sebloco_se : SE lista_condicoes ENTAO lista_acoes bloco_senao_opt FIMbloco_senao_opt : SENAO lista_acoesbloco_senao_opt : emptymodo_opt : MODO STRINGmodo_opt : empty'
     
-_lr_action_items = {'AUTOMACAO':([0,5,],[4,4,]),'$end':([1,2,3,7,42,],[0,-1,-3,-2,-4,]),'PONTO_VIRGULA':([2,3,7,42,],[5,-3,-2,-4,]),'STRING':([4,16,28,33,34,35,36,37,38,39,41,48,55,57,],[6,22,47,53,-14,-15,-16,-17,-18,-19,53,53,59,53,]),'QUANDO':([6,],[9,]),'SE':([8,13,14,17,22,23,24,31,40,43,44,45,46,52,53,54,56,57,58,59,60,61,63,65,66,],[11,-5,-7,32,-9,32,-23,-31,-6,-22,-24,-25,-26,-20,-21,-8,-28,-30,32,-27,-29,32,32,-32,32,]),'ENTAO':([8,10,12,13,14,18,22,40,50,51,52,53,54,61,],[-12,17,-11,-5,-7,-10,-9,-6,58,-13,-20,-21,-8,-12,]),'FIM':([8,23,24,31,43,44,45,46,52,53,56,57,59,60,61,62,64,65,66,],[-12,42,-23,-31,-22,-24,-25,-26,-20,-21,-28,-30,-27,-29,-12,65,-34,-32,-33,]),'ENTIDADE_ID':([9,11,20,25,26,29,30,32,49,],[15,19,15,44,45,48,49,19,57,]),'HORARIO':([9,20,],[16,16,]),'OU':([13,14,22,40,52,53,54,],[20,-7,-9,-6,-20,-21,-8,]),'MUDAR':([15,],[21,]),'LIGAR':([17,23,24,31,43,44,45,46,52,53,56,57,58,59,60,61,63,65,66,],[25,25,-23,-31,-22,-24,-25,-26,-20,-21,-28,-30,25,-27,-29,25,25,-32,25,]),'DESLIGAR':([17,23,24,31,43,44,45,46,52,53,56,57,58,59,60,61,63,65,66,],[26,26,-23,-31,-22,-24,-25,-26,-20,-21,-28,-30,26,-27,-29,26,26,-32,26,]),'ESPERAR':([17,23,24,31,43,44,45,46,52,53,56,57,58,59,60,61,63,65,66,],[27,27,-23,-31,-22,-24,-25,-26,-20,-21,-28,-30,27,-27,-29,27,27,-32,27,]),'NOTIFICAR':([17,23,24,31,43,44,45,46,52,53,56,57,58,59,60,61,63,65,66,],[28,28,-23,-31,-22,-24,-25,-26,-20,-21,-28,-30,28,-27,-29,28,28,-32,28,]),'DEFINIR':([17,23,24,31,43,44,45,46,52,53,56,57,58,59,60,61,63,65,66,],[29,29,-23,-31,-22,-24,-25,-26,-20,-21,-28,-30,29,-27,-29,29,29,-32,29,]),'CHAMAR':([17,23,24,31,43,44,45,46,52,53,56,57,58,59,60,61,63,65,66,],[30,30,-23,-31,-22,-24,-25,-26,-20,-21,-28,-30,30,-27,-29,30,30,-32,30,]),'MAIOR':([19,],[34,]),'MENOR':([19,],[35,]),'IGUAL':([19,],[36,]),'MAIOR_IGUAL':([19,],[37,]),'MENOR_IGUAL':([19,],[38,]),'DIFERENTE':([19,],[39,]),'PARA':([21,47,],[41,55,]),'SENAO':([24,31,43,44,45,46,52,53,56,57,59,60,61,65,],[-23,-31,-22,-24,-25,-26,-20,-21,-28,-30,-27,-29,63,-32,]),'TEMPO':([27,],[46,]),'NUMERO':([33,34,35,36,37,38,39,41,48,57,],[52,-14,-15,-16,-17,-18,-19,52,52,52,]),}
+_lr_action_items = {'AUTOMACAO':([0,5,],[4,4,]),'$end':([1,2,3,7,60,],[0,-1,-3,-2,-4,]),'PONTO_VIRGULA':([2,3,7,60,],[5,-3,-2,-4,]),'STRING':([4,16,29,35,36,37,38,39,40,41,43,46,52,62,64,],[6,23,51,58,-16,-17,-18,-19,-20,-21,58,61,58,66,58,]),'QUANDO':([6,],[9,]),'SE':([8,13,14,17,23,24,25,32,42,45,48,49,50,57,58,59,63,64,65,66,67,68,70,72,73,],[11,-5,-7,33,-9,33,-25,-33,-6,-24,-26,-27,-28,-22,-23,-8,-30,-32,33,-29,-31,33,33,-34,33,]),'ENTAO':([8,10,12,13,14,18,19,23,24,42,54,55,56,57,58,59,68,],[-14,17,-11,-5,-7,-10,-13,-9,-14,-6,65,-12,-15,-22,-23,-8,-14,]),'FIM':([8,24,25,32,44,45,47,48,49,50,57,58,61,63,64,66,67,68,69,71,72,73,],[-14,-14,-25,-33,60,-24,-38,-26,-27,-28,-22,-23,-37,-30,-32,-29,-31,-14,72,-36,-34,-35,]),'ENTIDADE_ID':([9,11,21,26,27,30,31,33,34,53,],[15,20,15,48,49,52,53,20,20,64,]),'HORARIO':([9,21,],[16,16,]),'OU':([13,14,23,42,57,58,59,],[21,-7,-9,-6,-22,-23,-8,]),'MUDAR':([15,],[22,]),'LIGAR':([17,24,25,32,45,48,49,50,57,58,63,64,65,66,67,68,70,72,73,],[26,26,-25,-33,-24,-26,-27,-28,-22,-23,-30,-32,26,-29,-31,26,26,-34,26,]),'DESLIGAR':([17,24,25,32,45,48,49,50,57,58,63,64,65,66,67,68,70,72,73,],[27,27,-25,-33,-24,-26,-27,-28,-22,-23,-30,-32,27,-29,-31,27,27,-34,27,]),'ESPERAR':([17,24,25,32,45,48,49,50,57,58,63,64,65,66,67,68,70,72,73,],[28,28,-25,-33,-24,-26,-27,-28,-22,-23,-30,-32,28,-29,-31,28,28,-34,28,]),'NOTIFICAR':([17,24,25,32,45,48,49,50,57,58,63,64,65,66,67,68,70,72,73,],[29,29,-25,-33,-24,-26,-27,-28,-22,-23,-30,-32,29,-29,-31,29,29,-34,29,]),'DEFINIR':([17,24,25,32,45,48,49,50,57,58,63,64,65,66,67,68,70,72,73,],[30,30,-25,-33,-24,-26,-27,-28,-22,-23,-30,-32,30,-29,-31,30,30,-34,30,]),'CHAMAR':([17,24,25,32,45,48,49,50,57,58,63,64,65,66,67,68,70,72,73,],[31,31,-25,-33,-24,-26,-27,-28,-22,-23,-30,-32,31,-29,-31,31,31,-34,31,]),'E':([18,19,54,55,56,57,58,],[34,-13,34,-12,-15,-22,-23,]),'MAIOR':([20,],[36,]),'MENOR':([20,],[37,]),'IGUAL':([20,],[38,]),'MAIOR_IGUAL':([20,],[39,]),'MENOR_IGUAL':([20,],[40,]),'DIFERENTE':([20,],[41,]),'PARA':([22,51,],[43,62,]),'MODO':([24,25,32,45,48,49,50,57,58,63,64,66,67,72,],[46,-25,-33,-24,-26,-27,-28,-22,-23,-30,-32,-29,-31,-34,]),'SENAO':([25,32,45,48,49,50,57,58,63,64,66,67,68,72,],[-25,-33,-24,-26,-27,-28,-22,-23,-30,-32,-29,-31,70,-34,]),'TEMPO':([28,],[50,]),'NUMERO':([35,36,37,38,39,40,41,43,52,64,],[57,-16,-17,-18,-19,-20,-21,57,57,57,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'programa':([0,],[1,]),'lista_automacoes':([0,],[2,]),'automacao':([0,5,],[3,7,]),'gatilho_bloco':([6,],[8,]),'condicao_opt':([8,],[10,]),'empty':([8,61,],[12,64,]),'lista_gatilhos':([9,],[13,]),'gatilho':([9,20,],[14,40,]),'condicao':([11,32,],[18,50,]),'lista_acoes':([17,58,63,],[23,61,66,]),'acao':([17,23,58,61,63,66,],[24,43,24,43,24,43,]),'bloco_se':([17,23,58,61,63,66,],[31,31,31,31,31,31,]),'operador':([19,],[33,]),'expressao':([33,41,48,57,],[51,54,56,60,]),'bloco_senao_opt':([61,],[62,]),}
+_lr_goto_items = {'programa':([0,],[1,]),'lista_automacoes':([0,],[2,]),'automacao':([0,5,],[3,7,]),'gatilho_bloco':([6,],[8,]),'condicao_opt':([8,],[10,]),'empty':([8,24,68,],[12,47,71,]),'lista_gatilhos':([9,],[13,]),'gatilho':([9,21,],[14,42,]),'lista_condicoes':([11,33,],[18,54,]),'condicao':([11,33,34,],[19,19,55,]),'lista_acoes':([17,65,70,],[24,68,73,]),'acao':([17,24,65,68,70,73,],[25,45,25,45,25,45,]),'bloco_se':([17,24,65,68,70,73,],[32,32,32,32,32,32,]),'operador':([20,],[35,]),'modo_opt':([24,],[44,]),'expressao':([35,43,52,64,],[56,59,63,67,]),'bloco_senao_opt':([68,],[69,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -30,35 +30,39 @@ _lr_productions = [
   ('programa -> lista_automacoes','programa',1,'p_programa','C_parser.py',39),
   ('lista_automacoes -> lista_automacoes PONTO_VIRGULA automacao','lista_automacoes',3,'p_lista_automacoes_mult','C_parser.py',44),
   ('lista_automacoes -> automacao','lista_automacoes',1,'p_lista_automacoes_unica','C_parser.py',48),
-  ('automacao -> AUTOMACAO STRING gatilho_bloco condicao_opt ENTAO lista_acoes FIM','automacao',7,'p_automacao','C_parser.py',53),
-  ('gatilho_bloco -> QUANDO lista_gatilhos','gatilho_bloco',2,'p_gatilho_bloco','C_parser.py',64),
-  ('lista_gatilhos -> lista_gatilhos OU gatilho','lista_gatilhos',3,'p_lista_gatilhos_mult','C_parser.py',69),
-  ('lista_gatilhos -> gatilho','lista_gatilhos',1,'p_lista_gatilhos_unico','C_parser.py',73),
-  ('gatilho -> ENTIDADE_ID MUDAR PARA expressao','gatilho',4,'p_gatilho_estado','C_parser.py',78),
-  ('gatilho -> HORARIO STRING','gatilho',2,'p_gatilho_horario','C_parser.py',87),
-  ('condicao_opt -> SE condicao','condicao_opt',2,'p_condicao_opt_presente','C_parser.py',95),
-  ('condicao_opt -> empty','condicao_opt',1,'p_condicao_opt_vazia','C_parser.py',99),
-  ('empty -> <empty>','empty',0,'p_empty','C_parser.py',103),
-  ('condicao -> ENTIDADE_ID operador expressao','condicao',3,'p_condicao','C_parser.py',108),
-  ('operador -> MAIOR','operador',1,'p_operador','C_parser.py',118),
-  ('operador -> MENOR','operador',1,'p_operador','C_parser.py',119),
-  ('operador -> IGUAL','operador',1,'p_operador','C_parser.py',120),
-  ('operador -> MAIOR_IGUAL','operador',1,'p_operador','C_parser.py',121),
-  ('operador -> MENOR_IGUAL','operador',1,'p_operador','C_parser.py',122),
-  ('operador -> DIFERENTE','operador',1,'p_operador','C_parser.py',123),
-  ('expressao -> NUMERO','expressao',1,'p_expressao_numero','C_parser.py',128),
-  ('expressao -> STRING','expressao',1,'p_expressao_string','C_parser.py',132),
-  ('lista_acoes -> lista_acoes acao','lista_acoes',2,'p_lista_acoes_mult','C_parser.py',137),
-  ('lista_acoes -> acao','lista_acoes',1,'p_lista_acoes_unica','C_parser.py',141),
-  ('acao -> LIGAR ENTIDADE_ID','acao',2,'p_acao_ligar','C_parser.py',146),
-  ('acao -> DESLIGAR ENTIDADE_ID','acao',2,'p_acao_desligar','C_parser.py',151),
-  ('acao -> ESPERAR TEMPO','acao',2,'p_acao_esperar','C_parser.py',156),
-  ('acao -> NOTIFICAR STRING PARA STRING','acao',4,'p_acao_notificar','C_parser.py',165),
-  ('acao -> DEFINIR ENTIDADE_ID expressao','acao',3,'p_acao_definir','C_parser.py',170),
-  ('acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao','acao',4,'p_acao_chamar_com_expressao','C_parser.py',175),
-  ('acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID','acao',3,'p_acao_chamar_sem_expressao','C_parser.py',180),
-  ('acao -> bloco_se','acao',1,'p_acao_bloco_se','C_parser.py',185),
-  ('bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM','bloco_se',6,'p_bloco_se','C_parser.py',190),
-  ('bloco_senao_opt -> SENAO lista_acoes','bloco_senao_opt',2,'p_bloco_senao_opt_presente','C_parser.py',200),
-  ('bloco_senao_opt -> empty','bloco_senao_opt',1,'p_bloco_senao_opt_vazia','C_parser.py',204),
+  ('automacao -> AUTOMACAO STRING gatilho_bloco condicao_opt ENTAO lista_acoes modo_opt FIM','automacao',8,'p_automacao','C_parser.py',53),
+  ('gatilho_bloco -> QUANDO lista_gatilhos','gatilho_bloco',2,'p_gatilho_bloco','C_parser.py',65),
+  ('lista_gatilhos -> lista_gatilhos OU gatilho','lista_gatilhos',3,'p_lista_gatilhos_mult','C_parser.py',70),
+  ('lista_gatilhos -> gatilho','lista_gatilhos',1,'p_lista_gatilhos_unico','C_parser.py',74),
+  ('gatilho -> ENTIDADE_ID MUDAR PARA expressao','gatilho',4,'p_gatilho_estado','C_parser.py',79),
+  ('gatilho -> HORARIO STRING','gatilho',2,'p_gatilho_horario','C_parser.py',88),
+  ('condicao_opt -> SE lista_condicoes','condicao_opt',2,'p_condicao_opt_presente','C_parser.py',96),
+  ('condicao_opt -> empty','condicao_opt',1,'p_condicao_opt_vazia','C_parser.py',100),
+  ('lista_condicoes -> lista_condicoes E condicao','lista_condicoes',3,'p_lista_condicoes_mult','C_parser.py',105),
+  ('lista_condicoes -> condicao','lista_condicoes',1,'p_lista_condicoes_unica','C_parser.py',109),
+  ('empty -> <empty>','empty',0,'p_empty','C_parser.py',113),
+  ('condicao -> ENTIDADE_ID operador expressao','condicao',3,'p_condicao','C_parser.py',118),
+  ('operador -> MAIOR','operador',1,'p_operador','C_parser.py',128),
+  ('operador -> MENOR','operador',1,'p_operador','C_parser.py',129),
+  ('operador -> IGUAL','operador',1,'p_operador','C_parser.py',130),
+  ('operador -> MAIOR_IGUAL','operador',1,'p_operador','C_parser.py',131),
+  ('operador -> MENOR_IGUAL','operador',1,'p_operador','C_parser.py',132),
+  ('operador -> DIFERENTE','operador',1,'p_operador','C_parser.py',133),
+  ('expressao -> NUMERO','expressao',1,'p_expressao_numero','C_parser.py',138),
+  ('expressao -> STRING','expressao',1,'p_expressao_string','C_parser.py',142),
+  ('lista_acoes -> lista_acoes acao','lista_acoes',2,'p_lista_acoes_mult','C_parser.py',147),
+  ('lista_acoes -> acao','lista_acoes',1,'p_lista_acoes_unica','C_parser.py',151),
+  ('acao -> LIGAR ENTIDADE_ID','acao',2,'p_acao_ligar','C_parser.py',156),
+  ('acao -> DESLIGAR ENTIDADE_ID','acao',2,'p_acao_desligar','C_parser.py',161),
+  ('acao -> ESPERAR TEMPO','acao',2,'p_acao_esperar','C_parser.py',166),
+  ('acao -> NOTIFICAR STRING PARA STRING','acao',4,'p_acao_notificar','C_parser.py',175),
+  ('acao -> DEFINIR ENTIDADE_ID expressao','acao',3,'p_acao_definir','C_parser.py',180),
+  ('acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao','acao',4,'p_acao_chamar_com_expressao','C_parser.py',185),
+  ('acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID','acao',3,'p_acao_chamar_sem_expressao','C_parser.py',190),
+  ('acao -> bloco_se','acao',1,'p_acao_bloco_se','C_parser.py',195),
+  ('bloco_se -> SE lista_condicoes ENTAO lista_acoes bloco_senao_opt FIM','bloco_se',6,'p_bloco_se','C_parser.py',200),
+  ('bloco_senao_opt -> SENAO lista_acoes','bloco_senao_opt',2,'p_bloco_senao_opt_presente','C_parser.py',210),
+  ('bloco_senao_opt -> empty','bloco_senao_opt',1,'p_bloco_senao_opt_vazia','C_parser.py',214),
+  ('modo_opt -> MODO STRING','modo_opt',2,'p_modo_opt_presente','C_parser.py',219),
+  ('modo_opt -> empty','modo_opt',1,'p_modo_opt_vazio','C_parser.py',237),
 ]

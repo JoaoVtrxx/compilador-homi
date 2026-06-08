@@ -16,6 +16,8 @@
     PARA          ->  para
     HORARIO       ->  horario
     OU            ->  ou
+    E             ->  e
+    MODO          ->  modo
 
     ENTIDADE_ID   ->  identificador de entidade (ex: sensor.temperatura_sala, light.luz_teto)
     TEMPO         ->  valor numérico com unidade de tempo (ex: 10s, 5min, 1h, 500ms)
@@ -43,11 +45,13 @@
     lista_gatilhos,
     gatilho,
     condicao_opt,
+    lista_condicoes,
     condicao,
     operador,
     expressao,
     lista_acoes,
     acao,
+    modo_opt,
     bloco_se,
     bloco_senao_opt
 
@@ -62,7 +66,7 @@
     R2:  lista_automacoes -> lista_automacoes PONTO_VIRGULA automacao
     R3:  lista_automacoes -> automacao
 
-    R4:  automacao        -> AUTOMACAO STRING gatilho_bloco condicao_opt ENTAO lista_acoes FIM
+    R4:  automacao        -> AUTOMACAO STRING gatilho_bloco condicao_opt ENTAO lista_acoes modo_opt FIM
 
     R5:  gatilho_bloco    -> QUANDO lista_gatilhos
 
@@ -72,34 +76,40 @@
     R8:  gatilho          -> ENTIDADE_ID MUDAR PARA expressao
     R9:  gatilho          -> HORARIO STRING                      # ex.: 'horario "05:00:00"'
 
-    R10: condicao_opt     -> SE condicao
+    R10: condicao_opt     -> SE lista_condicoes
     R11: condicao_opt     -> e  (vazio)
 
-    R12: condicao         -> ENTIDADE_ID operador expressao
+    R12: lista_condicoes  -> lista_condicoes E condicao           # múltiplas condições (AND)
+    R13: lista_condicoes  -> condicao
 
-    R13: operador         -> MAIOR
-    R14: operador         -> MENOR
-    R15: operador         -> IGUAL
-    R16: operador         -> MAIOR_IGUAL
-    R17: operador         -> MENOR_IGUAL
-    R18: operador         -> DIFERENTE
+    R14: condicao         -> ENTIDADE_ID operador expressao
 
-    R19: expressao        -> NUMERO
-    R20: expressao        -> STRING
+    R15: operador         -> MAIOR
+    R16: operador         -> MENOR
+    R17: operador         -> IGUAL
+    R18: operador         -> MAIOR_IGUAL
+    R19: operador         -> MENOR_IGUAL
+    R20: operador         -> DIFERENTE
 
-    R21: lista_acoes      -> lista_acoes acao
-    R22: lista_acoes      -> acao
+    R21: expressao        -> NUMERO
+    R22: expressao        -> STRING
 
-    R23: acao             -> LIGAR ENTIDADE_ID
-    R24: acao             -> DESLIGAR ENTIDADE_ID
-    R25: acao             -> ESPERAR TEMPO
-    R26: acao             -> NOTIFICAR STRING PARA STRING    # ex.: 'notificar "Luzes ajustadas" para "mobile_zfold4"'
-    R27: acao             -> DEFINIR ENTIDADE_ID expressao
-    R28: acao             -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao  # ex.: 'chamar media_player.volume_set media_player.music_frame 0.09'
-    R29: acao             -> CHAMAR ENTIDADE_ID ENTIDADE_ID            # ex.: 'chamar automation.trigger automation.cozinha_ligar_luzes'
-    R30: acao             -> bloco_se
+    R23: lista_acoes      -> lista_acoes acao
+    R24: lista_acoes      -> acao
 
-    R31: bloco_se         -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM
+    R25: acao             -> LIGAR ENTIDADE_ID
+    R26: acao             -> DESLIGAR ENTIDADE_ID
+    R27: acao             -> ESPERAR TEMPO
+    R28: acao             -> NOTIFICAR STRING PARA STRING    # ex.: 'notificar "Luzes ajustadas" para "mobile_zfold4"'
+    R29: acao             -> DEFINIR ENTIDADE_ID expressao
+    R30: acao             -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao  # ex.: 'chamar media_player.volume_set media_player.music_frame 0.09'
+    R31: acao             -> CHAMAR ENTIDADE_ID ENTIDADE_ID            # ex.: 'chamar automation.trigger automation.cozinha_ligar_luzes'
+    R32: acao             -> bloco_se
 
-    R32: bloco_senao_opt  -> SENAO lista_acoes
-    R33: bloco_senao_opt  -> e  (vazio)
+    R33: bloco_se         -> SE lista_condicoes ENTAO lista_acoes bloco_senao_opt FIM
+
+    R34: bloco_senao_opt  -> SENAO lista_acoes
+    R35: bloco_senao_opt  -> e  (vazio)
+
+    R36: modo_opt         -> MODO STRING                     # ex.: 'modo "reiniciar"' ou 'modo "fila"'
+    R37: modo_opt         -> e  (vazio)                      # padrão: single
