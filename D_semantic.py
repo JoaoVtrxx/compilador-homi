@@ -49,13 +49,13 @@ SERVICOS_VALIDOS = {
 
 # Se o serviço está aqui, a expressão é OBRIGATÓRIA no CHAMAR
 SERVICO_COM_EXPRESSAO = {
-    'volume_set':         'volume_level',    # ex.: chamar media_player.volume_set media_player.tv 0.09
-    'set_speed':          'speed',           # ex.: chamar fan.set_speed fan.ventilador "high"
-    'set_value':          'value',           # ex.: chamar input_number.set_value input_number.brilho 80
-    'speak':              'message',         # ex.: chamar tts.speak tts.google "ola mundo"
-    'send_text_command':  'text_command',    # ex.: chamar alexa_devices.send_text_command alexa_devices.echo "desligar tela"
-    'send_sound':         'sound',           # ex.: chamar alexa_devices.send_sound alexa_devices.echo "amzn_sfx_doorbell_chime_01"
-    'play_media':         'media_content_id', # ex.: chamar media_player.play_media media_player.tv "https://..."
+    'volume_set':         'volume_level',    # ex.: CHAMAR media_player.volume_set media_player.tv 0.09
+    'set_speed':          'speed',           # ex.: CHAMAR fan.set_speed fan.ventilador "high"
+    'set_value':          'value',           # ex.: CHAMAR input_number.set_value input_number.brilho 80
+    'speak':              'message',         # ex.: CHAMAR tts.speak tts.google "ola mundo"
+    'send_text_command':  'text_command',    # ex.: CHAMAR alexa_devices.send_text_command alexa_devices.echo "desligar tela"
+    'send_sound':         'sound',           # ex.: CHAMAR alexa_devices.send_sound alexa_devices.echo "amzn_sfx_doorbell_chime_01"
+    'play_media':         'media_content_id', # ex.: CHAMAR media_player.play_media media_player.tv "https://..."
 }
 
 class AnalisadorSemantico:

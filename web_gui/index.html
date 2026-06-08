@@ -1359,18 +1359,31 @@ automacao &quot;Minha Automacao&quot;
             root.appendChild(createConnector());
 
             // 3. Condition Block (Optional)
-            if (auto.condicao) {
+            if (auto.condicoes && auto.condicoes.length > 0) {
                 const condCard = document.createElement('div');
                 condCard.className = 'flow-card condition';
                 condCard.style.maxWidth = '500px';
                 condCard.style.width = '100%';
 
-                const val = auto.condicao.expressao ? auto.condicao.expressao.valor : '';
-                condCard.innerHTML = `
-                    <div class="flow-card-header">Condição Restritiva (Se)</div>
-                    <div class="flow-card-title">🔍 ${auto.condicao.entidade_id}</div>
-                    <div class="flow-card-detail">Deve ser: <strong>${auto.condicao.operador} "${val}"</strong></div>
-                `;
+                let condHtml = `<div class="flow-card-header">Condições Restritivas (Se)</div>`;
+                auto.condicoes.forEach((cond, idx) => {
+                    if (idx > 0) condHtml += '<div style="margin: 8px 0; border-top: 1px dashed var(--border-color); padding-top: 8px; color: var(--color-condition); font-weight: 700; font-size: 0.75rem;">E</div>';
+                    
+                    if (cond.node_type === 'CondicaoNode') {
+                        const val = cond.expressao ? cond.expressao.valor : '';
+                        condHtml += `
+                            <div class="flow-card-title">🔍 ${cond.entidade_id}</div>
+                            <div class="flow-card-detail">Deve ser: <strong>${cond.operador} "${val}"</strong></div>
+                        `;
+                    } else if (cond.node_type === 'CondicaoHorarioNode') {
+                        condHtml += `
+                            <div class="flow-card-title">⏰ Horário</div>
+                            <div class="flow-card-detail">Entre: <strong>${cond.depois}</strong> e <strong>${cond.antes}</strong></div>
+                        `;
+                    }
+                });
+                
+                condCard.innerHTML = condHtml;
                 root.appendChild(condCard);
                 root.appendChild(createConnector());
             }
@@ -1420,12 +1433,30 @@ automacao &quot;Minha Automacao&quot;
                     condCard.className = 'flow-card condition';
                     condCard.style.width = '100%';
                     condCard.style.maxWidth = '500px';
-                    const val = action.condicao.expressao ? action.condicao.expressao.valor : '';
-                    condCard.innerHTML = `
-                        <div class="flow-card-header">Lógica Condicional (Se Interno)</div>
-                        <div class="flow-card-title">❓ ${action.condicao.entidade_id}</div>
-                        <div class="flow-card-detail">Checa se: <strong>${action.condicao.operador} "${val}"</strong></div>
-                    `;
+                    
+                    let condHtml = `<div class="flow-card-header">Lógica Condicional (Se Interno)</div>`;
+                    if (action.condicoes && action.condicoes.length > 0) {
+                        action.condicoes.forEach((cond, idx) => {
+                            if (idx > 0) condHtml += '<div style="margin: 8px 0; border-top: 1px dashed var(--border-color); padding-top: 8px; color: var(--color-condition); font-weight: 700; font-size: 0.75rem;">E</div>';
+                            
+                            if (cond.node_type === 'CondicaoNode') {
+                                const val = cond.expressao ? cond.expressao.valor : '';
+                                condHtml += `
+                                    <div class="flow-card-title">❓ ${cond.entidade_id}</div>
+                                    <div class="flow-card-detail">Checa se: <strong>${cond.operador} "${val}"</strong></div>
+                                `;
+                            } else if (cond.node_type === 'CondicaoHorarioNode') {
+                                condHtml += `
+                                    <div class="flow-card-title">⏰ Horário</div>
+                                    <div class="flow-card-detail">Entre: <strong>${cond.depois}</strong> e <strong>${cond.antes}</strong></div>
+                                `;
+                            }
+                        });
+                    } else {
+                        condHtml += `<div class="flow-card-detail">Nenhuma condição definida</div>`;
+                    }
+                    condCard.innerHTML = condHtml;
+                    
                     ifElseContainer.appendChild(condCard);
                     ifElseContainer.appendChild(createConnector());
 

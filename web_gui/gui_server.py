@@ -142,7 +142,7 @@ class CompileHandler(BaseHTTPRequestHandler):
                 print(f"Erro Léxico Fatal: {str(e)}")
 
             # 2. Análise Sintática
-            from parser import parse
+            from C_parser import parse
             ast, erros_sintaticos = parse(code)
 
             # 3. Análise Semântica
