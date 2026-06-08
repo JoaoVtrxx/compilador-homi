@@ -11,21 +11,21 @@ from F_ast_nodes import (
     BlocoSeNode,
 )
 
+from D_semantic import SERVICO_COM_EXPRESSAO
 
 class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assistant)
     # Percorre a AST e gera uma lista de automações no formato YAML
-    # compatível com o Home Assistant.
 
     def __init__(self):
         self._id_counter = int(time.time() * 1000)
 
     def _gerar_id(self):
-        """Gera um ID numérico único para a automação."""
+        # Gera um ID numérico único para a automação. Pseudoaleatório baseado no time com incremento
         self._id_counter += 1
         return str(self._id_counter)
 
     def _extrair_dominio(self, entidade_id):
-        """Extrai o domínio de um entity_id."""
+        # Extrai o domínio de um entity_id.
         partes = entidade_id.split('.', 1)
         return partes[0] if len(partes) == 2 else 'switch'
 
@@ -175,10 +175,16 @@ class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assist
             }
 
         elif isinstance(acao, AcaoChamarNode):
+            data = {}
+            if acao.expressao is not None:
+                partes = acao.servico.split('.', 1)
+                nome_servico = partes[1] if len(partes) == 2 else ''
+                data_key = SERVICO_COM_EXPRESSAO.get(nome_servico, 'value')
+                data[data_key] = acao.expressao.valor
             return {
                 'action': acao.servico,
                 'metadata': {},
-                'data': {},
+                'data': data,
                 'target': {
                     'entity_id': acao.entidade_id,
                 },

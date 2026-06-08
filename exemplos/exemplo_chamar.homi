@@ -1,0 +1,44 @@
+# Exemplo: CHAMAR com expressão (valor)
+# Testa o comando CHAMAR com e sem valor
+
+# Automação 1: Ajustar volume da TV ao detectar movimento
+automacao "Sala - ajustar volume"
+    quando binary_sensor.sala_motion mudar para "on"
+    entao
+        chamar media_player.volume_set media_player.music_frame 0.09
+        notificar "Volume ajustado" para "mobile_app_zfold4"
+    fim
+;
+
+# Automação 2: Setar velocidade do ventilador
+automacao "Cozinha - ventilador"
+    quando sensor.temperatura_cozinha mudar para "hot"
+    se sensor.temperatura_cozinha > 30
+    entao
+        chamar fan.set_speed fan.ventilador_cozinha "high"
+    fim
+;
+
+# Automação 3: Enviar comando Alexa
+automacao "Sala - desligar tela Alexa"
+    quando horario "23:00:00"
+    entao
+        chamar alexa_devices.send_text_command alexa_devices.echo_show "desligar tela"
+        chamar alexa_devices.send_sound alexa_devices.echo "amzn_sfx_doorbell_chime_01"
+    fim
+;
+
+# Automação 4: CHAMAR sem valor (continua funcionando)
+automacao "Cozinha - trigger automação"
+    quando sensor.luminosidade_cozinha mudar para "low"
+    entao
+        chamar automation.trigger automation.cozinha_ligar_luzes
+    fim
+;
+
+# Automação 5: Definir valor de input_number
+automacao "Ajuste brilho"
+    quando horario "20:00:00"
+    entao
+        chamar input_number.set_value input_number.brilho_sala 80
+    fim

@@ -95,10 +95,11 @@
     R25: acao             -> ESPERAR TEMPO
     R26: acao             -> NOTIFICAR STRING PARA STRING    # ex.: 'notificar "Luzes ajustadas" para "mobile_zfold4"'
     R27: acao             -> DEFINIR ENTIDADE_ID expressao
-    R28: acao             -> CHAMAR ENTIDADE_ID ENTIDADE_ID  # ex.: 'chamar automation.trigger automation.cozinha_ligar_luzes'
-    R29: acao             -> bloco_se
+    R28: acao             -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao  # ex.: 'chamar media_player.volume_set media_player.music_frame 0.09'
+    R29: acao             -> CHAMAR ENTIDADE_ID ENTIDADE_ID            # ex.: 'chamar automation.trigger automation.cozinha_ligar_luzes'
+    R30: acao             -> bloco_se
 
-    R30: bloco_se         -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM
+    R31: bloco_se         -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM
 
-    R31: bloco_senao_opt  -> SENAO lista_acoes
-    R32: bloco_senao_opt  -> e  (vazio)
+    R32: bloco_senao_opt  -> SENAO lista_acoes
+    R33: bloco_senao_opt  -> e  (vazio)

@@ -86,9 +86,10 @@ class AcaoDefinirNode:
 
 @dataclass
 class AcaoChamarNode:
-    """Ação: CHAMAR ENTIDADE_ID(servico) ENTIDADE_ID(alvo)"""
+    """Ação: CHAMAR ENTIDADE_ID(servico) ENTIDADE_ID(alvo) [expressao]"""
     servico: str       # ex: "light.turn_on"
     entidade_id: str   # ex: "light.luz_sala"
+    expressao: Optional[ExpressaoNode] = None  # ex: 0.09, "high" (para serviços que requerem valor)
     linha: int = 0
 
 

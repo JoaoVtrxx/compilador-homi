@@ -31,23 +31,24 @@ Rule 25    acao -> DESLIGAR ENTIDADE_ID
 Rule 26    acao -> ESPERAR TEMPO
 Rule 27    acao -> NOTIFICAR STRING PARA STRING
 Rule 28    acao -> DEFINIR ENTIDADE_ID expressao
-Rule 29    acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID
-Rule 30    acao -> bloco_se
-Rule 31    bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM
-Rule 32    bloco_senao_opt -> SENAO lista_acoes
-Rule 33    bloco_senao_opt -> empty
+Rule 29    acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao
+Rule 30    acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID
+Rule 31    acao -> bloco_se
+Rule 32    bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM
+Rule 33    bloco_senao_opt -> SENAO lista_acoes
+Rule 34    bloco_senao_opt -> empty
 
 Terminals, with rules where they appear
 
 AUTOMACAO            : 4
-CHAMAR               : 29
+CHAMAR               : 29 30
 DEFINIR              : 28
 DESLIGAR             : 25
 DIFERENTE            : 19
-ENTAO                : 4 31
-ENTIDADE_ID          : 8 13 24 25 28 29 29
+ENTAO                : 4 32
+ENTIDADE_ID          : 8 13 24 25 28 29 29 30 30
 ESPERAR              : 26
-FIM                  : 4 31
+FIM                  : 4 32
 HORARIO              : 9
 IGUAL                : 16
 LIGAR                : 24
@@ -62,8 +63,8 @@ OU                   : 6
 PARA                 : 8 27
 PONTO_VIRGULA        : 2
 QUANDO               : 5
-SE                   : 10 31
-SENAO                : 32
+SE                   : 10 32
+SENAO                : 33
 STRING               : 4 9 21 27 27
 TEMPO                : 26
 error                : 
@@ -72,15 +73,15 @@ Nonterminals, with rules where they appear
 
 acao                 : 22 23
 automacao            : 2 3
-bloco_se             : 30
-bloco_senao_opt      : 31
-condicao             : 10 31
+bloco_se             : 31
+bloco_senao_opt      : 32
+condicao             : 10 32
 condicao_opt         : 4
-empty                : 11 33
-expressao            : 8 13 28
+empty                : 11 34
+expressao            : 8 13 28 29
 gatilho              : 6 7
 gatilho_bloco        : 4
-lista_acoes          : 4 22 31 32
+lista_acoes          : 4 22 32 33
 lista_automacoes     : 1 2
 lista_gatilhos       : 5 6
 operador             : 13
@@ -252,9 +253,10 @@ state 17
     (26) acao -> . ESPERAR TEMPO
     (27) acao -> . NOTIFICAR STRING PARA STRING
     (28) acao -> . DEFINIR ENTIDADE_ID expressao
-    (29) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID
-    (30) acao -> . bloco_se
-    (31) bloco_se -> . SE condicao ENTAO lista_acoes bloco_senao_opt FIM
+    (29) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID expressao
+    (30) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID
+    (31) acao -> . bloco_se
+    (32) bloco_se -> . SE condicao ENTAO lista_acoes bloco_senao_opt FIM
 
     LIGAR           shift and go to state 25
     DESLIGAR        shift and go to state 26
@@ -330,9 +332,10 @@ state 23
     (26) acao -> . ESPERAR TEMPO
     (27) acao -> . NOTIFICAR STRING PARA STRING
     (28) acao -> . DEFINIR ENTIDADE_ID expressao
-    (29) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID
-    (30) acao -> . bloco_se
-    (31) bloco_se -> . SE condicao ENTAO lista_acoes bloco_senao_opt FIM
+    (29) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID expressao
+    (30) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID
+    (31) acao -> . bloco_se
+    (32) bloco_se -> . SE condicao ENTAO lista_acoes bloco_senao_opt FIM
 
     FIM             shift and go to state 42
     LIGAR           shift and go to state 25
@@ -398,29 +401,30 @@ state 29
 
 state 30
 
-    (29) acao -> CHAMAR . ENTIDADE_ID ENTIDADE_ID
+    (29) acao -> CHAMAR . ENTIDADE_ID ENTIDADE_ID expressao
+    (30) acao -> CHAMAR . ENTIDADE_ID ENTIDADE_ID
 
     ENTIDADE_ID     shift and go to state 49
 
 
 state 31
 
-    (30) acao -> bloco_se .
+    (31) acao -> bloco_se .
 
-    FIM             reduce using rule 30 (acao -> bloco_se .)
-    LIGAR           reduce using rule 30 (acao -> bloco_se .)
-    DESLIGAR        reduce using rule 30 (acao -> bloco_se .)
-    ESPERAR         reduce using rule 30 (acao -> bloco_se .)
-    NOTIFICAR       reduce using rule 30 (acao -> bloco_se .)
-    DEFINIR         reduce using rule 30 (acao -> bloco_se .)
-    CHAMAR          reduce using rule 30 (acao -> bloco_se .)
-    SE              reduce using rule 30 (acao -> bloco_se .)
-    SENAO           reduce using rule 30 (acao -> bloco_se .)
+    FIM             reduce using rule 31 (acao -> bloco_se .)
+    LIGAR           reduce using rule 31 (acao -> bloco_se .)
+    DESLIGAR        reduce using rule 31 (acao -> bloco_se .)
+    ESPERAR         reduce using rule 31 (acao -> bloco_se .)
+    NOTIFICAR       reduce using rule 31 (acao -> bloco_se .)
+    DEFINIR         reduce using rule 31 (acao -> bloco_se .)
+    CHAMAR          reduce using rule 31 (acao -> bloco_se .)
+    SE              reduce using rule 31 (acao -> bloco_se .)
+    SENAO           reduce using rule 31 (acao -> bloco_se .)
 
 
 state 32
 
-    (31) bloco_se -> SE . condicao ENTAO lista_acoes bloco_senao_opt FIM
+    (32) bloco_se -> SE . condicao ENTAO lista_acoes bloco_senao_opt FIM
     (13) condicao -> . ENTIDADE_ID operador expressao
 
     ENTIDADE_ID     shift and go to state 19
@@ -594,14 +598,15 @@ state 48
 
 state 49
 
-    (29) acao -> CHAMAR ENTIDADE_ID . ENTIDADE_ID
+    (29) acao -> CHAMAR ENTIDADE_ID . ENTIDADE_ID expressao
+    (30) acao -> CHAMAR ENTIDADE_ID . ENTIDADE_ID
 
     ENTIDADE_ID     shift and go to state 57
 
 
 state 50
 
-    (31) bloco_se -> SE condicao . ENTAO lista_acoes bloco_senao_opt FIM
+    (32) bloco_se -> SE condicao . ENTAO lista_acoes bloco_senao_opt FIM
 
     ENTAO           shift and go to state 58
 
@@ -680,22 +685,28 @@ state 56
 
 state 57
 
-    (29) acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .
+    (29) acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID . expressao
+    (30) acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .
+    (20) expressao -> . NUMERO
+    (21) expressao -> . STRING
 
-    FIM             reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
-    LIGAR           reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
-    DESLIGAR        reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
-    ESPERAR         reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
-    NOTIFICAR       reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
-    DEFINIR         reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
-    CHAMAR          reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
-    SE              reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
-    SENAO           reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
+    FIM             reduce using rule 30 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
+    LIGAR           reduce using rule 30 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
+    DESLIGAR        reduce using rule 30 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
+    ESPERAR         reduce using rule 30 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
+    NOTIFICAR       reduce using rule 30 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
+    DEFINIR         reduce using rule 30 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
+    CHAMAR          reduce using rule 30 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
+    SE              reduce using rule 30 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
+    SENAO           reduce using rule 30 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID .)
+    NUMERO          shift and go to state 52
+    STRING          shift and go to state 53
 
+    expressao                      shift and go to state 60
 
 state 58
 
-    (31) bloco_se -> SE condicao ENTAO . lista_acoes bloco_senao_opt FIM
+    (32) bloco_se -> SE condicao ENTAO . lista_acoes bloco_senao_opt FIM
     (22) lista_acoes -> . lista_acoes acao
     (23) lista_acoes -> . acao
     (24) acao -> . LIGAR ENTIDADE_ID
@@ -703,9 +714,10 @@ state 58
     (26) acao -> . ESPERAR TEMPO
     (27) acao -> . NOTIFICAR STRING PARA STRING
     (28) acao -> . DEFINIR ENTIDADE_ID expressao
-    (29) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID
-    (30) acao -> . bloco_se
-    (31) bloco_se -> . SE condicao ENTAO lista_acoes bloco_senao_opt FIM
+    (29) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID expressao
+    (30) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID
+    (31) acao -> . bloco_se
+    (32) bloco_se -> . SE condicao ENTAO lista_acoes bloco_senao_opt FIM
 
     LIGAR           shift and go to state 25
     DESLIGAR        shift and go to state 26
@@ -715,7 +727,7 @@ state 58
     CHAMAR          shift and go to state 30
     SE              shift and go to state 32
 
-    lista_acoes                    shift and go to state 60
+    lista_acoes                    shift and go to state 61
     acao                           shift and go to state 24
     bloco_se                       shift and go to state 31
 
@@ -736,21 +748,37 @@ state 59
 
 state 60
 
-    (31) bloco_se -> SE condicao ENTAO lista_acoes . bloco_senao_opt FIM
+    (29) acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao .
+
+    FIM             reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao .)
+    LIGAR           reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao .)
+    DESLIGAR        reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao .)
+    ESPERAR         reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao .)
+    NOTIFICAR       reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao .)
+    DEFINIR         reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao .)
+    CHAMAR          reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao .)
+    SE              reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao .)
+    SENAO           reduce using rule 29 (acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao .)
+
+
+state 61
+
+    (32) bloco_se -> SE condicao ENTAO lista_acoes . bloco_senao_opt FIM
     (22) lista_acoes -> lista_acoes . acao
-    (32) bloco_senao_opt -> . SENAO lista_acoes
-    (33) bloco_senao_opt -> . empty
+    (33) bloco_senao_opt -> . SENAO lista_acoes
+    (34) bloco_senao_opt -> . empty
     (24) acao -> . LIGAR ENTIDADE_ID
     (25) acao -> . DESLIGAR ENTIDADE_ID
     (26) acao -> . ESPERAR TEMPO
     (27) acao -> . NOTIFICAR STRING PARA STRING
     (28) acao -> . DEFINIR ENTIDADE_ID expressao
-    (29) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID
-    (30) acao -> . bloco_se
+    (29) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID expressao
+    (30) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID
+    (31) acao -> . bloco_se
     (12) empty -> .
-    (31) bloco_se -> . SE condicao ENTAO lista_acoes bloco_senao_opt FIM
+    (32) bloco_se -> . SE condicao ENTAO lista_acoes bloco_senao_opt FIM
 
-    SENAO           shift and go to state 62
+    SENAO           shift and go to state 63
     LIGAR           shift and go to state 25
     DESLIGAR        shift and go to state 26
     ESPERAR         shift and go to state 27
@@ -761,21 +789,21 @@ state 60
     FIM             reduce using rule 12 (empty -> .)
     SE              shift and go to state 32
 
-    bloco_senao_opt                shift and go to state 61
+    bloco_senao_opt                shift and go to state 62
     acao                           shift and go to state 43
-    empty                          shift and go to state 63
+    empty                          shift and go to state 64
     bloco_se                       shift and go to state 31
-
-state 61
-
-    (31) bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt . FIM
-
-    FIM             shift and go to state 64
-
 
 state 62
 
-    (32) bloco_senao_opt -> SENAO . lista_acoes
+    (32) bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt . FIM
+
+    FIM             shift and go to state 65
+
+
+state 63
+
+    (33) bloco_senao_opt -> SENAO . lista_acoes
     (22) lista_acoes -> . lista_acoes acao
     (23) lista_acoes -> . acao
     (24) acao -> . LIGAR ENTIDADE_ID
@@ -783,9 +811,10 @@ state 62
     (26) acao -> . ESPERAR TEMPO
     (27) acao -> . NOTIFICAR STRING PARA STRING
     (28) acao -> . DEFINIR ENTIDADE_ID expressao
-    (29) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID
-    (30) acao -> . bloco_se
-    (31) bloco_se -> . SE condicao ENTAO lista_acoes bloco_senao_opt FIM
+    (29) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID expressao
+    (30) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID
+    (31) acao -> . bloco_se
+    (32) bloco_se -> . SE condicao ENTAO lista_acoes bloco_senao_opt FIM
 
     LIGAR           shift and go to state 25
     DESLIGAR        shift and go to state 26
@@ -795,46 +824,47 @@ state 62
     CHAMAR          shift and go to state 30
     SE              shift and go to state 32
 
-    lista_acoes                    shift and go to state 65
+    lista_acoes                    shift and go to state 66
     acao                           shift and go to state 24
     bloco_se                       shift and go to state 31
 
-state 63
-
-    (33) bloco_senao_opt -> empty .
-
-    FIM             reduce using rule 33 (bloco_senao_opt -> empty .)
-
-
 state 64
 
-    (31) bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .
+    (34) bloco_senao_opt -> empty .
 
-    FIM             reduce using rule 31 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
-    LIGAR           reduce using rule 31 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
-    DESLIGAR        reduce using rule 31 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
-    ESPERAR         reduce using rule 31 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
-    NOTIFICAR       reduce using rule 31 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
-    DEFINIR         reduce using rule 31 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
-    CHAMAR          reduce using rule 31 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
-    SE              reduce using rule 31 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
-    SENAO           reduce using rule 31 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
+    FIM             reduce using rule 34 (bloco_senao_opt -> empty .)
 
 
 state 65
 
-    (32) bloco_senao_opt -> SENAO lista_acoes .
+    (32) bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .
+
+    FIM             reduce using rule 32 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
+    LIGAR           reduce using rule 32 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
+    DESLIGAR        reduce using rule 32 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
+    ESPERAR         reduce using rule 32 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
+    NOTIFICAR       reduce using rule 32 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
+    DEFINIR         reduce using rule 32 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
+    CHAMAR          reduce using rule 32 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
+    SE              reduce using rule 32 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
+    SENAO           reduce using rule 32 (bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM .)
+
+
+state 66
+
+    (33) bloco_senao_opt -> SENAO lista_acoes .
     (22) lista_acoes -> lista_acoes . acao
     (24) acao -> . LIGAR ENTIDADE_ID
     (25) acao -> . DESLIGAR ENTIDADE_ID
     (26) acao -> . ESPERAR TEMPO
     (27) acao -> . NOTIFICAR STRING PARA STRING
     (28) acao -> . DEFINIR ENTIDADE_ID expressao
-    (29) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID
-    (30) acao -> . bloco_se
-    (31) bloco_se -> . SE condicao ENTAO lista_acoes bloco_senao_opt FIM
+    (29) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID expressao
+    (30) acao -> . CHAMAR ENTIDADE_ID ENTIDADE_ID
+    (31) acao -> . bloco_se
+    (32) bloco_se -> . SE condicao ENTAO lista_acoes bloco_senao_opt FIM
 
-    FIM             reduce using rule 32 (bloco_senao_opt -> SENAO lista_acoes .)
+    FIM             reduce using rule 33 (bloco_senao_opt -> SENAO lista_acoes .)
     LIGAR           shift and go to state 25
     DESLIGAR        shift and go to state 26
     ESPERAR         shift and go to state 27

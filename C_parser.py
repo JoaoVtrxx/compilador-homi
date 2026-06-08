@@ -170,17 +170,22 @@ def p_acao_definir(p):
     '''acao : DEFINIR ENTIDADE_ID expressao'''
     p[0] = AcaoDefinirNode(entidade_id=p[2], expressao=p[3], linha=p.lineno(1))
 
-# R28: acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID
-def p_acao_chamar(p):
+# R28: acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID expressao
+def p_acao_chamar_com_expressao(p):
+    '''acao : CHAMAR ENTIDADE_ID ENTIDADE_ID expressao'''
+    p[0] = AcaoChamarNode(servico=p[2], entidade_id=p[3], expressao=p[4], linha=p.lineno(1))
+
+# R29: acao -> CHAMAR ENTIDADE_ID ENTIDADE_ID
+def p_acao_chamar_sem_expressao(p):
     '''acao : CHAMAR ENTIDADE_ID ENTIDADE_ID'''
     p[0] = AcaoChamarNode(servico=p[2], entidade_id=p[3], linha=p.lineno(1))
 
-# R29: acao -> bloco_se
+# R30: acao -> bloco_se
 def p_acao_bloco_se(p):
     '''acao : bloco_se'''
     p[0] = p[1]
 
-# R30: bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM
+# R31: bloco_se -> SE condicao ENTAO lista_acoes bloco_senao_opt FIM
 def p_bloco_se(p):
     '''bloco_se : SE condicao ENTAO lista_acoes bloco_senao_opt FIM'''
     p[0] = BlocoSeNode(
@@ -190,7 +195,7 @@ def p_bloco_se(p):
         linha=p.lineno(1),
     )
 
-# R31-R32: bloco_senao_opt -> SENAO lista_acoes | e
+# R32-R33: bloco_senao_opt -> SENAO lista_acoes | e
 def p_bloco_senao_opt_presente(p):
     '''bloco_senao_opt : SENAO lista_acoes'''
     p[0] = p[2]
