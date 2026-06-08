@@ -1,14 +1,12 @@
-#!/usr/bin/env python3
-# gui_server.py
-# Servidor HTTP local nativo para a interface web do Compilador Homi.
-# Desenvolvido para rodar sem dependências externas adicionais.
-
 import os
 import sys
 import json
 import io
 import urllib.parse
 from http.server import HTTPServer, BaseHTTPRequestHandler
+
+# Servidor HTTP local nativo para a interface web do compilador.
+# Desenvolvido para rodar sem dependências externas adicionais.
 
 # Adiciona o diretório pai ao sys.path para podermos importar o compilador
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -216,7 +214,7 @@ def main():
     server_address = ('', port)
     httpd = HTTPServer(server_address, CompileHandler)
     print("=" * 65)
-    print(f" Servidor da Interface Gráfica do Compilador Homi iniciado!")
+    print(f" Servidor da interface grafica iniciado!")
     print(f" Abra no seu navegador: http://localhost:{port}")
     print("=" * 65)
     print(" Para parar o servidor: pressione Ctrl+C neste terminal.")

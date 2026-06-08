@@ -1,5 +1,4 @@
 # Exemplo 3: Múltiplas automações, múltiplos gatilhos, se/senao
-# Demonstra todos os recursos da linguagem Homi.
 
 # Automação 1: Movimento no corredor (dois sensores com OU)
 automacao "Corredor - movimento duplo"

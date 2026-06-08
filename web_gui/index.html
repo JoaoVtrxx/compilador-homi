@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homi IDE - Dashboard do Compilador</title>
-    
+    <title>Interface grafica do compilador</title>
+
     <!-- Google Fonts: Outfit (modern sans) e JetBrains Mono (monospaced) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <!-- Prism.js CSS para realce de sintaxe YAML -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-    
+
     <style>
         :root {
             --bg-main: #090d16;
@@ -21,17 +24,17 @@
             --border-color: #374151;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
-            
+
             --primary: #2563eb;
             --primary-glow: rgba(37, 99, 235, 0.4);
             --primary-hover: #3b82f6;
-            
+
             --success: #10b981;
             --success-glow: rgba(16, 185, 129, 0.2);
             --warning: #f59e0b;
             --danger: #ef4444;
             --danger-glow: rgba(239, 68, 68, 0.2);
-            
+
             --color-trigger: #0ea5e9;
             --color-condition: #eab308;
             --color-action: #a855f7;
@@ -256,9 +259,20 @@
             transition: background-color 0.3s;
         }
 
-        .status-dot.success { background-color: var(--success); box-shadow: 0 0 8px var(--success); }
-        .status-dot.error { background-color: var(--danger); box-shadow: 0 0 8px var(--danger); }
-        .status-dot.warning { background-color: var(--warning); box-shadow: 0 0 8px var(--warning); }
+        .status-dot.success {
+            background-color: var(--success);
+            box-shadow: 0 0 8px var(--success);
+        }
+
+        .status-dot.error {
+            background-color: var(--danger);
+            box-shadow: 0 0 8px var(--danger);
+        }
+
+        .status-dot.warning {
+            background-color: var(--warning);
+            box-shadow: 0 0 8px var(--warning);
+        }
 
         .console-output {
             flex: 1;
@@ -369,7 +383,7 @@
             border-bottom: 1px solid var(--border-color);
             padding: 16px;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -378,12 +392,20 @@
 
         .flow-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
         }
 
-        .flow-card.trigger { border-left-color: var(--color-trigger); }
-        .flow-card.condition { border-left-color: var(--color-condition); }
-        .flow-card.action { border-left-color: var(--color-action); }
+        .flow-card.trigger {
+            border-left-color: var(--color-trigger);
+        }
+
+        .flow-card.condition {
+            border-left-color: var(--color-condition);
+        }
+
+        .flow-card.action {
+            border-left-color: var(--color-action);
+        }
 
         .flow-card-header {
             display: flex;
@@ -395,9 +417,17 @@
             letter-spacing: 0.5px;
         }
 
-        .flow-card.trigger .flow-card-header { color: var(--color-trigger); }
-        .flow-card.condition .flow-card-header { color: var(--color-condition); }
-        .flow-card.action .flow-card-header { color: var(--color-action); }
+        .flow-card.trigger .flow-card-header {
+            color: var(--color-trigger);
+        }
+
+        .flow-card.condition .flow-card-header {
+            color: var(--color-condition);
+        }
+
+        .flow-card.action .flow-card-header {
+            color: var(--color-action);
+        }
 
         .flow-card-title {
             font-size: 0.95rem;
@@ -504,7 +534,7 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         table {
@@ -529,11 +559,11 @@
         }
 
         tr:nth-child(even) {
-            background-color: rgba(255,255,255,0.01);
+            background-color: rgba(255, 255, 255, 0.01);
         }
 
         tr:hover {
-            background-color: rgba(255,255,255,0.03);
+            background-color: rgba(255, 255, 255, 0.03);
         }
 
         .badge {
@@ -545,9 +575,23 @@
             text-transform: uppercase;
         }
 
-        .badge.sensor { background-color: rgba(14, 165, 233, 0.1); color: var(--color-trigger); border: 1px solid rgba(14, 165, 233, 0.2); }
-        .badge.atuador { background-color: rgba(168, 85, 247, 0.1); color: var(--color-action); border: 1px solid rgba(168, 85, 247, 0.2); }
-        .badge.auxiliar { background-color: rgba(99, 102, 241, 0.1); color: var(--color-control); border: 1px solid rgba(99, 102, 241, 0.2); }
+        .badge.sensor {
+            background-color: rgba(14, 165, 233, 0.1);
+            color: var(--color-trigger);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .badge.atuador {
+            background-color: rgba(168, 85, 247, 0.1);
+            color: var(--color-action);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .badge.auxiliar {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--color-control);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
 
         /* --- Tab: AST (Collapsible Tree View) --- */
         .ast-tree {
@@ -587,7 +631,7 @@
         }
 
         .ast-node-header:hover {
-            background-color: rgba(255,255,255,0.05);
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
         .ast-toggle {
@@ -670,7 +714,7 @@
             height: 20px;
         }
 
-        .switch input { 
+        .switch input {
             opacity: 0;
             width: 0;
             height: 0;
@@ -701,17 +745,18 @@
             border-radius: 50%;
         }
 
-        input:checked + .slider {
+        input:checked+.slider {
             background-color: var(--primary);
             border-color: var(--primary);
         }
 
-        input:checked + .slider:before {
+        input:checked+.slider:before {
             transform: translateX(16px);
             background-color: white;
         }
     </style>
 </head>
+
 <body>
 
     <!-- Header Section -->
@@ -719,11 +764,11 @@
         <div class="logo-area">
             <div class="logo-icon">H</div>
             <div class="logo-title">
-                <h1>Homi Compiler IDE</h1>
+                <h1>Compilador</h1>
                 <p>Pipeline visual de automações para Home Assistant</p>
             </div>
         </div>
-        
+
         <div class="toolbar">
             <!-- Dropdown de Exemplos -->
             <div class="dropdown-container">
@@ -744,7 +789,8 @@
 
             <!-- Botão Compilar -->
             <button class="btn-compile" id="btn-compile">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="5 3 19 12 5 21 5 3"></polygon>
                 </svg>
                 Compilar
@@ -754,25 +800,26 @@
 
     <!-- Main Workspace -->
     <div class="workspace">
-        
+
         <!-- Left Panel: Editor & Logs -->
         <div class="left-panel">
             <div class="editor-container">
                 <div class="line-numbers" id="line-numbers">1</div>
-                <textarea class="editor-textarea" id="editor" placeholder="# Escreva seu script Homi aqui...
+                <textarea class="editor-textarea" id="editor" placeholder="# Escreva seu script aqui...
 automacao &quot;Minha Automacao&quot;
     quando sensor.movimento mudar para &quot;on&quot;
     entao
         ligar light.sala
     fim" spellcheck="false"></textarea>
             </div>
-            
+
             <div class="console-container">
                 <div class="console-header">
                     <span>Console do Compilador</span>
                     <span class="status-dot" id="console-status-dot"></span>
                 </div>
-                <div class="console-output" id="console-output">Editor iniciado. Digite algo ou carregue um exemplo...</div>
+                <div class="console-output" id="console-output">Editor iniciado. Digite algo ou carregue um exemplo...
+                </div>
             </div>
         </div>
 
@@ -787,13 +834,13 @@ automacao &quot;Minha Automacao&quot;
             </div>
 
             <div class="tabs-content">
-                
+
                 <!-- Tab: Flowchart -->
                 <div class="tab-pane active" id="tab-flow">
                     <div class="empty-state" id="flow-empty">
                         <div class="empty-icon">📊</div>
                         <h3>Nenhum fluxo para exibir</h3>
-                        <p>Escreva um código Homi válido e compile para visualizar o fluxograma da automação.</p>
+                        <p>Escreva um código válido e compile para visualizar o fluxograma da automação.</p>
                     </div>
                     <div id="flow-content" class="flow-container" style="display: none;"></div>
                 </div>
@@ -820,7 +867,8 @@ automacao &quot;Minha Automacao&quot;
                     <div class="empty-state" id="symbols-empty">
                         <div class="empty-icon">🔑</div>
                         <h3>Tabela de Símbolos vazia</h3>
-                        <p>Compile um script válido para ver as variáveis e entidades registradas pelo analisador semântico.</p>
+                        <p>Compile um script válido para ver as variáveis e entidades registradas pelo analisador
+                            semântico.</p>
                     </div>
                     <div id="symbols-content" style="display: none;">
                         <table class="table-container">
@@ -884,13 +932,13 @@ automacao &quot;Minha Automacao&quot;
         const btnCompile = document.getElementById('btn-compile');
         const autoCompileToggle = document.getElementById('auto-compile-toggle');
         const examplesSelect = document.getElementById('examples-select');
-        
+
         const consoleOutput = document.getElementById('console-output');
         const consoleStatusDot = document.getElementById('console-status-dot');
-        
+
         const tabBtns = document.querySelectorAll('.tab-btn');
         const tabPanes = document.querySelectorAll('.tab-pane');
-        
+
         // Tab contents and empty states
         const views = {
             flow: { content: document.getElementById('flow-content'), empty: document.getElementById('flow-empty') },
@@ -930,7 +978,7 @@ automacao &quot;Minha Automacao&quot;
             btn.addEventListener('click', () => {
                 tabBtns.forEach(b => b.classList.remove('active'));
                 tabPanes.forEach(p => p.classList.remove('active'));
-                
+
                 btn.classList.add('active');
                 const targetTab = btn.getAttribute('data-tab');
                 document.getElementById(targetTab).classList.add('active');
@@ -959,7 +1007,7 @@ automacao &quot;Minha Automacao&quot;
         examplesSelect.addEventListener('change', async () => {
             const fileName = examplesSelect.value;
             if (!fileName) return;
-            
+
             try {
                 const response = await fetch(`/api/example?name=${encodeURIComponent(fileName)}`);
                 if (response.ok) {
@@ -991,7 +1039,7 @@ automacao &quot;Minha Automacao&quot;
         async function compile() {
             const code = editor.value;
             if (!code.trim()) {
-                consoleOutput.textContent = "Editor vazio. Escreva algum código Homi para compilar.";
+                consoleOutput.textContent = "Editor vazio. Escreva algum código para compilar.";
                 consoleStatusDot.className = 'status-dot';
                 return;
             }
@@ -1025,7 +1073,7 @@ automacao &quot;Minha Automacao&quot;
             // 1. Process stdout logs in Console
             let formattedLogs = data.logs || '';
             consoleOutput.innerHTML = formatLogs(formattedLogs, data);
-            
+
             // Set status dot
             if (data.success) {
                 consoleStatusDot.className = 'status-dot success';
@@ -1080,7 +1128,7 @@ automacao &quot;Minha Automacao&quot;
                     let badgeClass = 'auxiliar';
                     if (info.tipo === 'sensor') badgeClass = 'sensor';
                     if (info.tipo === 'atuador') badgeClass = 'atuador';
-                    
+
                     tr.innerHTML = `
                         <td><code>${name}</code></td>
                         <td>${info.dominio}</td>
@@ -1112,7 +1160,7 @@ automacao &quot;Minha Automacao&quot;
                 views.flow.content.style.display = 'flex';
                 const flowContent = document.getElementById('flow-content');
                 flowContent.innerHTML = '';
-                
+
                 // For each automation, render its flowchart blocks
                 data.ast.automacoes.forEach(auto => {
                     flowContent.appendChild(renderAutomationFlow(auto));
@@ -1127,7 +1175,7 @@ automacao &quot;Minha Automacao&quot;
         function formatLogs(logs, data) {
             let lines = logs.split('\n');
             let formatted = '';
-            
+
             lines.forEach(line => {
                 if (line.includes('Erro de Sintaxe') || line.includes('Erro Semântico') || line.includes('Erro Léxico') || line.includes('✗')) {
                     formatted += `<div class="error-line">${escapeHtml(line)}</div>`;
@@ -1153,7 +1201,7 @@ automacao &quot;Minha Automacao&quot;
                     formatted += `<div class="error-line">✗ ${escapeHtml(e)}</div>`;
                 });
             }
-            
+
             return formatted || "Compilação concluída sem logs adicionais de saída.";
         }
 
@@ -1166,7 +1214,7 @@ automacao &quot;Minha Automacao&quot;
             header.className = 'ast-node-header';
 
             const nodeType = node.node_type || 'Node';
-            
+
             // Build key properties representation
             let propsText = '';
             let childrenNodes = {};
@@ -1174,7 +1222,7 @@ automacao &quot;Minha Automacao&quot;
             Object.keys(node).forEach(key => {
                 if (key === 'node_type') return;
                 const val = node[key];
-                
+
                 if (val && typeof val === 'object') {
                     // It's a child node or list of child nodes
                     childrenNodes[key] = val;
@@ -1218,7 +1266,7 @@ automacao &quot;Minha Automacao&quot;
 
                 Object.keys(childrenNodes).forEach(key => {
                     const child = childrenNodes[key];
-                    
+
                     const labelDiv = document.createElement('div');
                     labelDiv.style.marginLeft = '15px';
                     labelDiv.style.color = '#9ca3af';
@@ -1279,14 +1327,14 @@ automacao &quot;Minha Automacao&quot;
             triggersContainer.className = 'flow-card trigger';
             triggersContainer.style.maxWidth = '500px';
             triggersContainer.style.width = '100%';
-            
+
             let triggerHeader = `<div class="flow-card-header">Gatilho (Quando)</div>`;
             let triggerBody = '';
-            
+
             if (auto.gatilhos && auto.gatilhos.length > 0) {
                 auto.gatilhos.forEach((g, idx) => {
                     if (idx > 0) triggerBody += '<div style="margin: 8px 0; border-top: 1px dashed var(--border-color); padding-top: 8px; color: var(--color-trigger); font-weight: 700; font-size: 0.75rem;">OU</div>';
-                    
+
                     if (g.node_type === 'GatilhoEstadoNode') {
                         const val = g.expressao ? g.expressao.valor : '';
                         triggerBody += `
@@ -1303,7 +1351,7 @@ automacao &quot;Minha Automacao&quot;
             } else {
                 triggerBody = '<div class="flow-card-detail">Sem gatilhos definidos.</div>';
             }
-            
+
             triggersContainer.innerHTML = triggerHeader + triggerBody;
             root.appendChild(triggersContainer);
 
@@ -1316,7 +1364,7 @@ automacao &quot;Minha Automacao&quot;
                 condCard.className = 'flow-card condition';
                 condCard.style.maxWidth = '500px';
                 condCard.style.width = '100%';
-                
+
                 const val = auto.condicao.expressao ? auto.condicao.expressao.valor : '';
                 condCard.innerHTML = `
                     <div class="flow-card-header">Condição Restritiva (Se)</div>
@@ -1343,7 +1391,7 @@ automacao &quot;Minha Automacao&quot;
             actionsListContainer.style.display = 'flex';
             actionsListContainer.style.flexDirection = 'column';
             actionsListContainer.style.alignItems = 'center';
-            
+
             renderActionNodes(auto.acoes, actionsListContainer);
             root.appendChild(actionsListContainer);
 
@@ -1389,7 +1437,7 @@ automacao &quot;Minha Automacao&quot;
                     const thenCol = document.createElement('div');
                     thenCol.className = 'branch-column branch-then';
                     thenCol.innerHTML = '<span class="branch-title">Verdadeiro</span>';
-                    
+
                     const thenActionsContainer = document.createElement('div');
                     thenActionsContainer.style.width = '100%';
                     renderActionNodes(action.acoes_entao, thenActionsContainer);
@@ -1495,4 +1543,5 @@ automacao &quot;Minha Automacao&quot;
         updateLineNumbers();
     </script>
 </body>
+
 </html>

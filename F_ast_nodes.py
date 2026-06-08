@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
-# Definição dos nós da Árvore Sintática Abstrata (AST) para a linguagem Homi
+# Definição dos nós da Árvore Sintática Abstrata (AST)
 
 # Expressões (folhas da árvore):
 
