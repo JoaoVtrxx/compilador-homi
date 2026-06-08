@@ -1,8 +1,4 @@
-# semantic.py
-# Análise Semântica para a linguagem Homi.
-# Implementa tabela de símbolos, verificação de tipos e consistência de domínios.
-
-from ast_nodes import (
+from F_ast_nodes import (
     ProgramaNode, AutomacaoNode,
     GatilhoEstadoNode, GatilhoHorarioNode,
     CondicaoNode, ExpressaoNode,
@@ -11,40 +7,36 @@ from ast_nodes import (
     BlocoSeNode,
 )
 
-# ============================================================
-# Tabela de Símbolos: Domínios do Home Assistant
-# ============================================================
-
-# Domínios conhecidos e seus tipos/capacidades
+# Tabela de Símbolos: Domínios conhecidos e seus tipos/capacidades
 DOMINIOS = {
-    'light':                 {'tipo': 'atuador',  'acoes': ['ligar', 'desligar', 'definir']},
-    'switch':                {'tipo': 'atuador',  'acoes': ['ligar', 'desligar']},
-    'cover':                 {'tipo': 'atuador',  'acoes': ['ligar', 'desligar']},
+    'light':                 {'tipo': 'atuador',  'acoes': ['ligar', 'desligar', 'definir']}, # ex.: LIGAR light.luz_cozinha
+    'switch':                {'tipo': 'atuador',  'acoes': ['ligar', 'desligar']},  # ex.: DESLIGAR switch.switch_1
+    'cover':                 {'tipo': 'atuador',  'acoes': ['ligar', 'desligar']},  
     'media_player':          {'tipo': 'atuador',  'acoes': ['ligar', 'desligar', 'definir']},
-    'fan':                   {'tipo': 'atuador',  'acoes': ['ligar', 'desligar', 'definir']},
+    'fan':                   {'tipo': 'atuador',  'acoes': ['ligar', 'desligar', 'definir']}, # ex.: DEFINIR fan.ventilador_cozinha "high"
     'sensor':                {'tipo': 'sensor',   'acoes': []},
     'binary_sensor':         {'tipo': 'sensor',   'acoes': []},
     'weather':               {'tipo': 'sensor',   'acoes': []},
     'alarm_control_panel':   {'tipo': 'painel',   'acoes': ['ligar', 'desligar']},
-    'timer':                 {'tipo': 'auxiliar',  'acoes': ['chamar']},
+    'timer':                 {'tipo': 'auxiliar',  'acoes': ['chamar']}, # Não serve pra nada a ação 'chamar' aqui, só pra documentação
     'input_boolean':         {'tipo': 'auxiliar',  'acoes': ['ligar', 'desligar']},
     'input_number':          {'tipo': 'auxiliar',  'acoes': ['definir']},
     'input_text':            {'tipo': 'auxiliar',  'acoes': ['definir']},
-    'automation':            {'tipo': 'auxiliar',  'acoes': ['chamar']},
-    'notify':                {'tipo': 'servico',  'acoes': ['notificar']},
-    'script':                {'tipo': 'auxiliar',  'acoes': ['chamar']},
-    'scene':                 {'tipo': 'auxiliar',  'acoes': ['chamar']},
+    'automation':            {'tipo': 'auxiliar',  'acoes': ['chamar']}, # Não serve pra nada a ação 'chamar' aqui, só pra documentação
+    'notify':                {'tipo': 'servico',  'acoes': ['notificar']},  # Não serve pra nada a ação 'notificar' aqui, só pra documentação
+    'script':                {'tipo': 'auxiliar',  'acoes': ['chamar']}, # Não serve pra nada a ação 'chamar' aqui, só pra documentação
+    'scene':                 {'tipo': 'auxiliar',  'acoes': ['chamar']}, # Não serve pra nada a ação 'chamar' aqui, só pra documentação
 }
 
 # Serviços válidos por domínio (para a ação CHAMAR)
 SERVICOS_VALIDOS = {
-    'light':        ['turn_on', 'turn_off', 'toggle'],
-    'switch':       ['turn_on', 'turn_off', 'toggle'],
+    'light':        ['turn_on', 'turn_off', 'toggle'],   # ex.: CHAMAR light.turn_on light.luz_cozinha 
+    'switch':       ['turn_on', 'turn_off', 'toggle'],   # ex.: CHAMAR switch.turn_off switch.smart_switch_1
     'cover':        ['open_cover', 'close_cover', 'toggle', 'stop_cover'],
-    'media_player': ['turn_on', 'turn_off', 'volume_set', 'play_media', 'media_pause'],
-    'fan':          ['turn_on', 'turn_off', 'toggle', 'set_speed'],
-    'timer':        ['start', 'cancel', 'finish'],
-    'automation':   ['trigger', 'turn_on', 'turn_off'],
+    'media_player': ['turn_on', 'turn_off', 'volume_set', 'play_media', 'media_pause'], # ex.: CHAMAR media_player.media_pause media_player.tv_sala
+    'fan':          ['turn_on', 'turn_off', 'toggle', 'set_speed'], # ex.: CHAMAR fan.set_speed fan.ventilador_cozinha  (ainda não tem como setar uma speed específica)
+    'timer':        ['start', 'cancel', 'finish'], # ex.: CHAMAR timer.start  timer.meu_cronometro_da_cozinha
+    'automation':   ['trigger', 'turn_on', 'turn_off'], # ex.: CHAMAR automation.trigger automation.cozinha_ligar_luzes
     'notify':       ['mobile_app_*', 'send_message'],
     'input_boolean':['turn_on', 'turn_off', 'toggle'],
     'input_number': ['set_value'],
@@ -55,14 +47,11 @@ SERVICOS_VALIDOS = {
     'alexa_devices':['send_text_command', 'send_sound'],
 }
 
-
 class AnalisadorSemantico:
-    """
-    Percorre a AST e realiza verificações semânticas:
-    - Validação de domínio (entidades pertencem a domínios conhecidos)
-    - Verificação de tipos (ações compatíveis com tipo do domínio)
-    - Consistência de serviços (serviço existe para o domínio)
-    """
+    # Percorre a AST e realiza verificações semânticas:
+    # - Validação de domínio (entidades pertencem a domínios conhecidos)
+    # - Verificação de tipos (ações compatíveis com tipo do domínio)
+    # - Consistência de serviços (serviço existe para o domínio)
 
     def __init__(self):
         self.erros = []      # Lista de erros semânticos (impedem compilação)
@@ -70,22 +59,22 @@ class AnalisadorSemantico:
         self.tabela_simbolos = {}  # entidade_id -> {dominio, tipo, linha_decl}
 
     def _extrair_dominio(self, entidade_id):
-        """Extrai o domínio de um entity_id (ex: 'sensor' de 'sensor.temperatura')."""
+        # Extrai o domínio de um entity_id (ex: 'sensor' de 'sensor.temperatura').
         partes = entidade_id.split('.', 1)
         return partes[0] if len(partes) == 2 else None
 
     def _registrar_entidade(self, entidade_id, linha):
-        """Registra uma entidade na tabela de símbolos."""
+        # Registra uma entidade na tabela de símbolos.
         if entidade_id not in self.tabela_simbolos:
             dominio = self._extrair_dominio(entidade_id)
             self.tabela_simbolos[entidade_id] = {
-                'dominio': dominio,
-                'tipo': DOMINIOS.get(dominio, {}).get('tipo', 'desconhecido'),
+                'dominio': dominio,                                            # ex.: light
+                'tipo': DOMINIOS.get(dominio, {}).get('tipo', 'desconhecido'), # ex.: atuador
                 'linha_primeira_ref': linha,
             }
 
     def _validar_dominio(self, entidade_id, linha):
-        """Verifica se o domínio da entidade é conhecido."""
+        # Verifica se o domínio da entidade é conhecido.
         dominio = self._extrair_dominio(entidade_id)
         if dominio and dominio not in DOMINIOS:
             self.avisos.append(
@@ -94,7 +83,7 @@ class AnalisadorSemantico:
             )
 
     def _validar_acao_entidade(self, acao_nome, entidade_id, linha):
-        """Verifica se a ação é compatível com o domínio da entidade."""
+        # Verifica se a ação é compatível com o domínio da entidade.
         dominio = self._extrair_dominio(entidade_id)
         if dominio and dominio in DOMINIOS:
             acoes_permitidas = DOMINIOS[dominio]['acoes']
@@ -104,10 +93,10 @@ class AnalisadorSemantico:
                     f"Erro Semântico (linha {linha}): Não é possível executar "
                     f"'{acao_nome}' na entidade '{entidade_id}' - domínio "
                     f"'{dominio}' (tipo: {tipo_dom}) não suporta esta ação."
-                )
+                ) # parei aq !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     def _validar_servico(self, servico_str, entidade_alvo, linha):
-        """Verifica se o serviço chamado é válido para o domínio."""
+        # Verifica se o serviço chamado é válido para o domínio.
         partes = servico_str.split('.', 1)
         if len(partes) != 2:
             self.erros.append(

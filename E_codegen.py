@@ -1,12 +1,8 @@
-# codegen.py
-# Gerador de Código Intermediário: AST -> YAML (Home Assistant)
-# Traduz a árvore sintática para automações YAML compatíveis com Home Assistant.
-
 import yaml
 import uuid
 import time
 
-from ast_nodes import (
+from F_ast_nodes import (
     ProgramaNode, AutomacaoNode,
     GatilhoEstadoNode, GatilhoHorarioNode,
     CondicaoNode,
@@ -16,11 +12,9 @@ from ast_nodes import (
 )
 
 
-class GeradorYAML:
-    """
-    Percorre a AST e gera uma lista de automações no formato YAML
-    compatível com o Home Assistant.
-    """
+class GeradorYAML: # Gerador de Código Intermediário: AST -> YAML (Home Assistant)
+    # Percorre a AST e gera uma lista de automações no formato YAML
+    # compatível com o Home Assistant.
 
     def __init__(self):
         self._id_counter = int(time.time() * 1000)
@@ -233,49 +227,3 @@ class GeradorYAML:
             sort_keys=False,
             width=120,
         )
-
-
-# ============================================================
-# Teste Local
-# ============================================================
-if __name__ == '__main__':
-    from ast_nodes import ExpressaoNode
-
-    # Construir AST de teste manualmente
-    programa = ProgramaNode(automacoes=[
-        AutomacaoNode(
-            alias="Corredor - movimento",
-            gatilhos=[
-                GatilhoEstadoNode("sensor.corredor_motion", ExpressaoNode('STRING', 'on'), 1),
-                GatilhoEstadoNode("binary_sensor.porta", ExpressaoNode('STRING', 'on'), 2),
-            ],
-            condicao=CondicaoNode("sensor.temperatura", ">", ExpressaoNode('NUMERO', 25), 3),
-            acoes=[
-                AcaoLigarNode("light.corredor", 4),
-                AcaoEsperarNode("2min", 120.0, 5),
-                AcaoDesligarNode("light.corredor", 6),
-                AcaoNotificarNode("Luz desligada!", "mobile_app_zfold4", 7),
-                BlocoSeNode(
-                    condicao=CondicaoNode("switch.modo_noturno", "==", ExpressaoNode('STRING', 'off'), 8),
-                    acoes_entao=[AcaoChamarNode("light.turn_on", "light.led_noturno", 9)],
-                    acoes_senao=[AcaoDesligarNode("light.led_noturno", 10)],
-                    linha=8,
-                ),
-            ],
-            linha=1,
-        ),
-        AutomacaoNode(
-            alias="Sala - desligar LED",
-            gatilhos=[GatilhoHorarioNode("05:00:00", 12)],
-            condicao=None,
-            acoes=[AcaoDesligarNode("light.led_sanca", 13)],
-            linha=12,
-        ),
-    ])
-
-    gerador = GeradorYAML()
-    yaml_saida = gerador.gerar(programa)
-    print("=" * 60)
-    print("  YAML GERADO")
-    print("=" * 60)
-    print(yaml_saida)

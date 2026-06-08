@@ -6,10 +6,10 @@
 import sys
 import argparse
 
-from lexer import lexer
-from parser import parse
-from semantic import AnalisadorSemantico
-from codegen import GeradorYAML
+from B_lexer import lexer
+from C_parser import parse
+from D_semantic import AnalisadorSemantico
+from E_codegen import GeradorYAML
 
 
 def main():

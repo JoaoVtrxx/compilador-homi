@@ -1,10 +1,10 @@
 import ply.yacc as yacc
 
 # Importa os tokens do lexer (obrigatório para o PLY)
-from lexer import tokens
+from B_lexer import tokens
 
 # Importa os nós da AST
-from ast_nodes import (
+from F_ast_nodes import (
     ProgramaNode, AutomacaoNode,
     GatilhoEstadoNode, GatilhoHorarioNode,
     CondicaoNode, ExpressaoNode,
@@ -16,9 +16,8 @@ from ast_nodes import (
 # Armazenamento de erros para relatório final
 erros_sintaticos = []
 
-# Função auxiliar: converte string de tempo para segundos
 def _tempo_para_segundos(tempo_raw):
-    """Converte '10s', '5min', '1h', '500ms' para segundos (float)."""
+    # Converte '10s', '5min', '1h', '500ms' para segundos (float).
     if tempo_raw.endswith('ms'):
         return float(tempo_raw[:-2]) / 1000.0
     elif tempo_raw.endswith('min'):
@@ -30,11 +29,14 @@ def _tempo_para_segundos(tempo_raw):
     return 0.0
 
 # REGRAS DE PRODUÇÃO (Gramática SLR(1))
-# Cada função p_* constrói o nó AST correspondente.
+# Cada função p_* (production *) constrói o nó AST correspondente.
+# p[0] é sempre a expressão mais à esquerda da regra.
+# p[1], p[2], etc. são os tokens ou regras à direita da regra.
+# No começo de cada função, sepre precisa ter '''resultado : parte1 parte2 parte3...'''
 
 # R1: programa -> lista_automacoes
 def p_programa(p):
-    '''programa : lista_automacoes'''
+    '''programa : lista_automacoes''' # p[0] = programa / p[1] = lista_automacoes
     p[0] = ProgramaNode(automacoes=p[1])
 
 # R2-R3: lista_automacoes -> lista_automacoes PONTO_VIRGULA automacao | automacao
@@ -49,7 +51,7 @@ def p_lista_automacoes_unica(p):
 # R4: automacao -> AUTOMACAO STRING gatilho_bloco condicao_opt ENTAO lista_acoes FIM
 def p_automacao(p):
     '''automacao : AUTOMACAO STRING gatilho_bloco condicao_opt ENTAO lista_acoes FIM'''
-    p[0] = AutomacaoNode(
+    p[0] = AutomacaoNode(  # Cria um nó "AutomacaoNode", inserindo os 't.value' dos tokens recebidos na AST em cada campo do nó
         alias=p[2],
         gatilhos=p[3],
         condicao=p[4],
@@ -65,7 +67,7 @@ def p_gatilho_bloco(p):
 # R6-R7: lista_gatilhos -> lista_gatilhos OU gatilho | gatilho
 def p_lista_gatilhos_mult(p):
     '''lista_gatilhos : lista_gatilhos OU gatilho'''
-    p[0] = p[1] + [p[3]]
+    p[0] = p[1] + [p[3]] # como tem recursão, precisa ser [p[3]] para criar uma lista, e ir aumentando ela
 
 def p_lista_gatilhos_unico(p):
     '''lista_gatilhos : gatilho'''
@@ -195,9 +197,9 @@ def p_bloco_senao_opt_presente(p):
 
 def p_bloco_senao_opt_vazia(p):
     '''bloco_senao_opt : empty'''
-    p[0] = []
+    p[0] = []          # É bem melhor retornar lista vazia, pois assim o "BloseSeNode" sempre terá uma lista nas acoes_senao (mesmo que vazia).
 
-# TRATAMENTO DE ERROS - MODO PÂNICO
+# TRATAMENTO DE ERROS (MODO PÂNICO)
 def p_error(p):
     # Modo Pânico: ao encontrar um erro sintático, o parser pula tokens até encontrar um ponto de sincronização
     # (PONTO_VIRGULA ou FIM) e tenta continuar a análise.
@@ -228,17 +230,15 @@ parser = yacc.yacc(method='SLR')
 
 # Funções de interface pública
 def parse(data, lexer_instance=None):
-    # Analisa sintaticamente um script Homi.
     # Retorna (ProgramaNode, lista_de_erros).
 
     global erros_sintaticos
     erros_sintaticos = []
 
-    from lexer import lexer as default_lexer
-    lex_to_use = lexer_instance or default_lexer
-    lex_to_use.lineno = 1  # Reseta contagem de linhas
+    from B_lexer import lexer
+    lexer.lineno = 1  # Reseta contagem de linhas
 
-    resultado = parser.parse(data, lexer=lex_to_use)
+    resultado = parser.parse(data, lexer=lexer)
 
     if erros_sintaticos:
         print(f"\n>>> {len(erros_sintaticos)} erro(s) sintático(s) encontrado(s).")

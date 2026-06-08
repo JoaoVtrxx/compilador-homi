@@ -130,7 +130,7 @@ class CompileHandler(BaseHTTPRequestHandler):
 
         try:
             # 1. Análise Léxica
-            from lexer import lexer
+            from B_lexer import lexer
             lexer.input(code)
             lexer.lineno = 1
             try:
@@ -149,7 +149,7 @@ class CompileHandler(BaseHTTPRequestHandler):
 
             # 3. Análise Semântica
             if ast and not erros_sintaticos:
-                from semantic import AnalisadorSemantico
+                from D_semantic import AnalisadorSemantico
                 analisador = AnalisadorSemantico()
                 erros_semanticos, avisos_semanticos = analisador.analisar(ast)
                 
@@ -165,7 +165,7 @@ class CompileHandler(BaseHTTPRequestHandler):
 
                 # 4. Geração de Código
                 if not erros_semanticos:
-                    from codegen import GeradorYAML
+                    from E_codegen import GeradorYAML
                     gerador = GeradorYAML()
                     yaml_saida = gerador.gerar(ast)
                     success = True

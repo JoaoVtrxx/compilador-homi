@@ -1,26 +1,18 @@
-# ast_nodes.py
-# Definição dos nós da Árvore Sintática Abstrata (AST) para a linguagem Homi.
-# Cada classe corresponde a um não-terminal da GLC.
-
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
+# Definição dos nós da Árvore Sintática Abstrata (AST) para a linguagem Homi.
 
-# ============================================================
-# Expressões (folhas da árvore)
-# ============================================================
+# Expressões (folhas da árvore):
 
 @dataclass
-class ExpressaoNode:
-    """Representa um valor literal: NUMERO ou STRING."""
+class ExpressaoNode: # Representa um valor literal: NUMERO ou STRING.
     tipo: str          # 'NUMERO' ou 'STRING'
     valor: Union[int, float, str]
     linha: int = 0
 
 
-# ============================================================
-# Gatilhos (triggers)
-# ============================================================
+# Gatilhos (triggers):
 
 @dataclass
 class GatilhoEstadoNode:
